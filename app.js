@@ -3,7 +3,8 @@ require("dotenv").config();
 const express = require("express"),
 	cors = require('cors'),
 	mongoose = require("mongoose");
-const createError = require('http-errors');
+const createError = require('http-errors'),
+	morgan = require("morgan");
 
 const apiRoutes = require("./routes/apiRoutes"),
 	authRoutes = require('./routes/authRoutes');
@@ -62,6 +63,7 @@ const app = express();
 
 // middlewares
 app.use(cors());
+app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
