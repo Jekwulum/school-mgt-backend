@@ -2,14 +2,20 @@ require("dotenv").config();
 
 const express = require("express"),
 	cors = require('cors'),
-	mongoose = require("mongoose");
-const createError = require('http-errors'),
-	morgan = require("morgan");
+	mongoose = require("mongoose"),
+	createError = require('http-errors'),
+	morgan = require("morgan"),
+	path = require('path');
 
 const apiRoutes = require("./routes/apiRoutes"),
 	authRoutes = require('./routes/authRoutes');
 
+
+global.appRoot = path.resolve(__dirname);
+global.appName = `School Management API`;
+
 const port = process.env.PORT || 4000,
+	logger = require('./middlewares/utils/logger'),
 	sqlDb = require('./middlewares/config/sql_database'),
 	swaggerJsDoc = require('swagger-jsdoc'),
 	swaggerUi = require('swagger-ui-express'),
@@ -23,7 +29,7 @@ const swaggerOptions = {
 			contact: {
 				name: "Charles Nwoye",
 				email: "charlesnwoye2@gmail.com",
-				url: "https://jekwulum-portfolio.netlify.app"
+				url: "https://jekwulum.vercel.app"
 			},
 			servers: ['http://localhost:40000']
 		}
@@ -34,10 +40,9 @@ const swaggerDocs = swaggerJsDoc(swaggerOptions);
 
 
 // connecting to db
-mongoose.connect("mongodb://localhost:27017/test", { useUnifiedTopology: true, useNewUrlParser: true },
-	function (err) {
-		if (err) throw err;
-	});
+mongoose.connect(process.env.MONGO_ATLAS_URL, { useUnifiedTopology: true, useNewUrlParser: true })
+	.then(() => logger.info(`[Database connection]: Connected correctly to MongoDB server for ${appName}..`))
+	.catch(error => logger.error(`Connection error to MongoDB Server. [Issue]: ${error}`));;
 
 const db = mongoose.connection;
 db.once('open', () => {
@@ -48,11 +53,19 @@ db.once('open', () => {
 // SQL
 try {
 	sqlDb.authenticate()
-		.then(() => console.log('Connection to SQL database has been established successfully.'))
-		.catch(err => console.error(`SQL db connection error ${err}`));
+		.then(() => {
+			console.log('Connection to SQL database has been established successfully.');
+			logger.info(`[Database connection]: Connected correctly to SQL server for ${appName}..`)
+		})
+		.catch(err => {
+			console.error(`SQL db connection error ${err}`);
+			logger.error(`Connection error to SQL Server. [Issue]: ${err}`)
+		});
 } catch (error) {
 	console.error(`Unable to connect to the database: ${error}`);
+	logger.error(`Unable to connect to SQL Server. [Issue]: ${error}`)
 };
+
 (async () => {
 	await sqlDb.sync({ alter: true });
 })();
@@ -62,11 +75,6 @@ try {
 const app = express();
 
 // middlewares
-app.use(cors());
-app.use(morgan('dev'));
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use((req, res, next) => {
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
@@ -75,6 +83,12 @@ app.use((req, res, next) => {
 	res.header("Access-Control-Allow-Credentials", 'true');
 	next();
 });
+
+app.use(cors());
+app.use(morgan('dev'));
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 
 // routes
@@ -87,4 +101,4 @@ app.use((req, res, next) => {
 
 
 // starting the server
-app.listen(port, () => console.log(`listening on port ${port}`));
+app.listen(port, () => console.log(`[${appName}]: http://localhost:${port}`));
