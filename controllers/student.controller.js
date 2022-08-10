@@ -11,9 +11,10 @@ const getStudents = async (req, res) => {
     for (let i = 0; i < students.length; i++) {
       let data = students[i].toObject()
       delete data.password;
+      delete data.token;
       responseData.push(flattenObject(data));
     };
-    return res.status(200).json({ message: "Success", data: responseData, status: status[200] });
+    return res.status(200).json({ message: "SUCCESS", data: responseData, status: status[200] });
   };
   return res.status(404).json({ status: status[404], message: "records not found!" });
 };
@@ -31,7 +32,7 @@ const getStudentById = async (req, res) => {
     delete responseData.password;
     responseData = { ...responseData, createdAt, dob };
 
-    return res.status(200).json({ message: "Success", data: responseData, status: status[200] });
+    return res.status(200).json({ message: "SUCCESS", data: responseData, status: status[200] });
   };
   return res.status(404).json({ status: status[404], message: "student not found" });
 };
@@ -49,7 +50,7 @@ const updateStudent = async (req, res) => {
     delete responseData.password;
     responseData = { ...responseData, dob };
 
-    return res.status(200).json({ message: "Success", data: responseData, status: status[200] });
+    return res.status(200).json({ message: "SUCCESS", data: responseData, status: status[200] });
   }
   return res.status(404).json({ status: status[404], message: "student not found" });
 };
@@ -58,7 +59,7 @@ const deleteStudent = async (req, res) => {
   studentExists = await studentDb.findOne({ student_id: req.params.id });
   if (studentExists) {
     await studentDb.deleteOne({ student_id: req.params.id });
-    return res.status(200).json({ status: status[200], message: "student deleted successfully" });
+    return res.status(200).json({ message: "SUCCESS", status: status[200], message: "student deleted successfully" });
   } else return res.status(404).json({ status: status[404], message: "student not found" });
 };
 

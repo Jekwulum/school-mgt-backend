@@ -3,10 +3,15 @@ const {createLogger, format, transports} = winston;
 const {combine, colorize, timestamp, printf} = format;
 const logLevel = 'debug';
 
+const path = require('path');
+global.appRoot = path.resolve(__dirname);
+global.appName = `School Management API`;
+
 const myFormat = printf(({level, message, label, timestamp}) => {
     const ts = timestamp.slice(0, 19).replace('T', ' ');
     return `[${ts}] ${level}: ${message}`;
 });
+
 
 winston.addColors({
   error: 'red',
