@@ -16,7 +16,6 @@ global.appName = `School Management API`;
 
 const port = process.env.PORT || 4000,
 	logger = require('./middlewares/utils/logger'),
-	// sqlDb = require('./middlewares/config/sql_database'),
 	sqlDb = require('./models/index'),
 	swaggerJsDoc = require('swagger-jsdoc'),
 	swaggerUi = require('swagger-ui-express'),
@@ -47,7 +46,7 @@ mongoose.connect(process.env.MONGO_ATLAS_URL, { useUnifiedTopology: true, useNew
 
 const db = mongoose.connection;
 db.once('open', () => {
-	console.log("Connected to MongoDb database....")
+	console.log(`[Database connection]: Connected correctly to MongoDB server for ${appName}..`)
 });
 
 
