@@ -16,7 +16,8 @@ global.appName = `School Management API`;
 
 const port = process.env.PORT || 4000,
 	logger = require('./middlewares/utils/logger'),
-	sqlDb = require('./middlewares/config/sql_database'),
+	// sqlDb = require('./middlewares/config/sql_database'),
+	sqlDb = require('./models/index'),
 	swaggerJsDoc = require('swagger-jsdoc'),
 	swaggerUi = require('swagger-ui-express'),
 	swaggerDocument = require("./middlewares/swagger.json");
@@ -50,24 +51,8 @@ db.once('open', () => {
 });
 
 
-// SQL
-try {
-	sqlDb.authenticate()
-		.then(() => {
-			console.log('Connection to SQL database has been established successfully.');
-			logger.info(`[Database connection]: Connected correctly to SQL server for ${appName}..`)
-		})
-		.catch(err => {
-			console.error(`SQL db connection error ${err}`);
-			logger.error(`Connection error to SQL Server. [Issue]: ${err}`)
-		});
-} catch (error) {
-	console.error(`Unable to connect to the database: ${error}`);
-	logger.error(`Unable to connect to SQL Server. [Issue]: ${error}`)
-};
-
 (async () => {
-	await sqlDb.sync({ alter: true });
+	await sqlDb.sequelize.sync({ alter: true });
 })();
 
 
