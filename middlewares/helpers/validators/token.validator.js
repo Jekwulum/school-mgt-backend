@@ -6,7 +6,6 @@ const staffDb = require('../../../models/staffModel');
 const tokenValidator = {
   verifyToken: (req, res, next) => {
     const token = req.body.token || req.query.token || req.headers['x-access-token'];
-    console.log(token);
 
     if (!token) {
       const response = AuthResponse.authenticationError();
@@ -15,7 +14,7 @@ const tokenValidator = {
 
     try {
       req.user = jwt.verify(token, config.TOKEN_KEY);
-      console.log(req.user);
+      // console.log(req.user);
     } catch (error) {
       const response = AuthResponse.InvalidTokenError();
       return res.status(response.status).json({ status: response.type, message: response.message });

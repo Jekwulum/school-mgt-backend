@@ -18,19 +18,20 @@ let sequelize = new Sequelize(process.env.POSTGRES_URI, {
       require: true,
       rejectUnauthorized: false
     }
-  }
+  },
+  logging: false
 }
 );
 
 sequelize
   .authenticate()
   .then(() => {
-    console.log('Connection has been established successfully.');
-    logger.info(`[Database connection]: Connected correctly to SQL server for ${appName}..`);
+    console.log(`[Database connection]: Connected correctly to PostgresDB server for ${appName}..`);
+    logger.info(`[Database connection]: Connected correctly to PostgresDB server for ${appName}..`);
   })
   .catch(err => {
-    console.error('Unable to connect to the database:', err);
-    logger.error(`2. Unable to connect to SQL Server. [Issue]: ${err}`)
+    console.error(`Unable to connect to PostgresDB Server. [Issue]: ${err}`);
+    logger.error(`Unable to connect to PostgresDB Server. [Issue]: ${err}`)
   });
 
 db.sequelize = sequelize;

@@ -4,6 +4,11 @@ const { DataTypes } = require('sequelize');
 const Course = require('./courseModel.js');
 
 const Grade = db.sequelize.define('Grade', {
+    id: {
+        type: db.Sequelize.UUID,
+        defaultValue: db.Sequelize.UUIDV4,
+        primaryKey: true,
+      },
     student_id: { type: DataTypes.STRING, allowNull: false },
     course_code: {
         type: DataTypes.STRING, allowNull: false,
