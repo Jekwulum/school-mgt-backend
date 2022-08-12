@@ -7,12 +7,17 @@ const { updateController, flattenObject } = require('../middlewares/utils/utils'
 const getStudents = async (req, res) => {
   const responseData = [];
   let students = await studentDb.find();
+
   if (students) {
     for (let i = 0; i < students.length; i++) {
+      let id = students[i]._id;
       let data = students[i].toObject()
       delete data.password;
       delete data.token;
-      responseData.push(flattenObject(data));
+      delete data.__v;
+      let flattenedData = flattenObject(data);
+      let studentData = { ...flattenedData, id };
+      responseData.push(studentData);
     };
     return res.status(200).json({ message: "SUCCESS", data: responseData, status: status[200] });
   };
@@ -20,17 +25,15 @@ const getStudents = async (req, res) => {
 };
 
 const getStudentById = async (req, res) => {
-  let student = await studentDb.findOne({ student_id: req.params.id }).populate('student_class');
+  let student = await studentDb.findOne({ student_id: req.params.id });
   if (student) {
-    createdAt = JSON.stringify(student.createdAt).split("T")[0].replace('"', "");
-    dob = JSON.stringify(student.dob).split("T")[0].replace('"', "");
-
-    let teacher_id = String(student.student_class.teacher_id);
-    teacher = await staffDb.findById(teacher_id);
+    let createdAt = JSON.stringify(student.createdAt).split("T")[0].replace('"', "");
+    let dob = JSON.stringify(student.dob).split("T")[0].replace('"', "");
+    let id = student._id;
 
     let responseData = flattenObject(student.toObject());
     delete responseData.password;
-    responseData = { ...responseData, createdAt, dob };
+    responseData = { ...responseData, createdAt, dob, id };
 
     return res.status(200).json({ message: "SUCCESS", data: responseData, status: status[200] });
   };
@@ -38,19 +41,11 @@ const getStudentById = async (req, res) => {
 };
 
 const updateStudent = async (req, res) => {
-  let student = await studentDb.findOneAndUpdate({ student_id: req.params.id }, { new: true }).populate('student_class');
+  let student = await studentDb.findOneAndUpdate({ student_id: req.params.id }, { new: true });
   if (student) {
-    updatedStudent = await updateController(data = req.body,
-      obj = student, studentClass = classDB);
+    let updatedStudent = await updateController(data = req.body, obj = student, studentClass = classDB);
     await updatedStudent.save();
-    student = await updatedStudent.populate('student_class');
-    dob = JSON.stringify(student.dob).split("T")[0].replace('"', "");
-
-    let responseData = flattenObject(student);
-    delete responseData.password;
-    responseData = { ...responseData, dob };
-
-    return res.status(200).json({ message: "SUCCESS", data: responseData, status: status[200] });
+    return res.status(200).json({ message: "SUCCESS", status: status[200] });
   }
   return res.status(404).json({ status: status[404], message: "student not found" });
 };
@@ -59,7 +54,7 @@ const deleteStudent = async (req, res) => {
   studentExists = await studentDb.findOne({ student_id: req.params.id });
   if (studentExists) {
     await studentDb.deleteOne({ student_id: req.params.id });
-    return res.status(200).json({ message: "SUCCESS", status: status[200], message: "student deleted successfully" });
+    return res.status(200).json({ message: "SUCCESS", status: status[204], message: "student deleted successfully" });
   } else return res.status(404).json({ status: status[404], message: "student not found" });
 };
 

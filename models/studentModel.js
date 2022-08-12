@@ -9,7 +9,6 @@ const studentDb = mongoose.Schema({
     required: true,
     unique: true
   },
-  class_id: { type: mongoose.Schema.Types.ObjectId, ref: "Class" },
   password: {
     type: String,
     required: true
