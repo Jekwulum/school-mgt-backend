@@ -23,23 +23,23 @@ authRouter.post('/signin', async (req, res) => {
     if (staff && (await staff.matchPassword(password))) {
       staff.token = generateToken(staff._id, staff.staff_id);
 
-      let data = staff.toObject();
-      delete data.password;
-      return res.status(200).json({ status: status[200], message: "success", data });
+      // let data = staff.toObject();
+      // delete data.password;
+      return res.status(200).json({ status: "SUCCESS", message: "Login Successful", access: staff.token });
     };
-    return res.status(400).json("Incorrect Username or Password!");
+    return res.status(400).json({ status: "FAILED", message: "Incorrect Username or Password!" });
   }
   else if (id.slice(0, 3) === "stu") {
     const student = await studentDb.findOne({ student_id: id });
     if (student && await (student.matchPassword(password))) {
       student.token = generateToken(student._id, student.student_id);
 
-      let data = student.toObject();
-      delete data.password;
-      return res.status(200).json({ status: status[200], message: "success", data })
+      // let data = student.toObject();
+      // delete data.password;
+      return res.status(200).json({ status: "SUCCESS", message: "Login Successful", access: student.token });
     }
-    return res.status(400).json("Incorrect Username or Password!");
-  } else return res.status(400).json("Incorrect Username or Password!");
+    return res.status(400).json({ status: "FAILED", message: "Incorrect Username or Password!" });
+  } else return res.status(400).json({ status: "FAILED", message: "Incorrect Username or Password!" });
 })
 
 // sign up router
@@ -133,9 +133,7 @@ authRouter.post('/create_student', async (req, res) => {
     newStudent.save((err, responseObj) => {
       if (err || !responseObj) return res.status(400).json({ "error": err });
       else {
-        let data = newStudent.toObject();
-        delete data.password;
-        return res.status(201).json({ "message": "New Student added successfully!", data });
+        return res.status(201).json({ "message": "New Student added successfully!", access: newStudent.token });
       };
     });
   } else return res.status(404).json("passwords do not match!");
