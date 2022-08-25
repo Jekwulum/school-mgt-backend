@@ -1,8 +1,8 @@
 const status = require('http-status');
-const classDB = require('../models/classModel'),
-  staffDb = require('../models/staffModel'),
-  studentDb = require('../models/studentModel');
-const { updateController, flattenObject } = require('../middlewares/utils/utils');
+const classDB = require('../models/classModel');
+const cloudinary = require('../middlewares/utils/cloudinary');
+const studentDb = require('../models/studentModel');
+const { updateController, flattenObject, generateID, generateToken } = require('../middlewares/utils/utils');
 
 const getStudents = async (req, res) => {
   const responseData = [];
@@ -58,5 +58,42 @@ const deleteStudent = async (req, res) => {
   } else return res.status(404).json({ status: status[404], message: "student not found" });
 };
 
+const create = async (req, res) => {
+  const studentExists = await studentDb.findOne({ email: req.body.email });
+  if (studentExists) return res.status(400).json("Student Email already exists!");
+  if (req.body.password !== req.body.confirmPassword) return res.status(404).json("passwords do not match!");
 
-module.exports = { getStudents, getStudentById, updateStudent, deleteStudent };
+  try {
+    const cloudinary_response = await cloudinary.uploader.upload(req.body.photo, {
+      folder: "mySchool"
+    });
+
+    let newStudent = await new studentDb({
+      student_id: await generateID("stu", studentDb),
+      password: req.body.password,
+      name: {
+        first: req.body.first,
+        last: req.body.last,
+        other: req.body.other
+      },
+      gender: req.body.gender,
+      dob: req.body.dob,
+      phone: req.body.phone,
+      email: req.body.email,
+      photo: cloudinary_response.secure_url
+    });
+    newStudent.token = generateToken(newStudent._id, newStudent.student_id);
+    newStudent.save((err, responseObj) => {
+      if (err || !responseObj) return res.status(400).json({ "error": err });
+      else {
+        return res.status(201).json({ "message": "New Student added successfully!", access: newStudent.token });
+      };
+    });
+  } catch (error) {
+    console.log("error for try-catch: ", error);
+    return res.status(500).json({"message": "Internal Server Error"});
+  }
+};
+
+
+module.exports = { getStudents, getStudentById, updateStudent, deleteStudent, create };

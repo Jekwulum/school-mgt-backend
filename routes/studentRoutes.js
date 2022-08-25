@@ -14,6 +14,12 @@ studentRouter.get("/:id",
   StudentController.getStudentById
 );
 
+studentRouter.post("/",
+  tokenValidator.verifyToken,
+  tokenValidator.adminValidator,
+  StudentController.create
+);
+
 studentRouter.put("/:id",
   tokenValidator.verifyToken,
   tokenValidator.adminValidator,
