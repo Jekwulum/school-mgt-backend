@@ -1,8 +1,7 @@
-const express = require('express'),
-  studentRouter = express.Router();
-const tokenValidator = require('../middlewares/helpers/validators/token.validator');
+const express = require('express');
+const studentRouter = express.Router();
 const StudentController = require('../controllers/student.controller');
-
+const tokenValidator = require('../middlewares/helpers/validators/token.validator');
 
 studentRouter.get("/",
   tokenValidator.verifyToken,

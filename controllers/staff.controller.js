@@ -50,11 +50,18 @@ const updateStaff = async (req, res) => {
 const deleteStaff = async (req, res) => {
 	const staffExists = await staffDb.findOne({ staff_id: req.params.id });
 	if (staffExists) {
-		await staffDb.deleteOne({ staff_id: req.params.id });
-		return res.status(204).json({ message: "SUCCESS", status: status[204] });
+		staffDb.deleteOne({ staff_id: req.params.id })
+			.then(() => {
+				console.log("deleted");
+				return res.status(200).json({ message: "SUCCESS", status: status[204] });
+			})
+			.catch(error => {
+				console.log(error);
+				res.status(400).json({ status: status[400], message: error })
+			});
 	} else {
-		return res.status(404).json({ status: status[404], message: "record not found!" })
-	}
+		return res.status(404).json({ message: "Record not found", status: status[404] });
+	};
 };
 
 const create = async (req, res) => {

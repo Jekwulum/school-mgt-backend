@@ -29,9 +29,13 @@ function pad(n, length) {
 }
 
 const generateID = async (idType, dbModel) => {
-  let count = await dbModel.countDocuments() + 1;
+  let count = await dbModel.countDocuments() + Math.floor(Math.random() * 700);
   let padDigit = pad(count, 3);
   let new_id = idType + String(padDigit);
+
+  // if (idType === "stf" && dbModel.findOne({staff_id: new_id})) new_id = generateID("stf", dbModel);
+  // else if (idType === "stu" && dbModel.findOne({student_id: new_id})) new_id = generateID("stu", dbModel);
+  
   return new_id;
 };
 
