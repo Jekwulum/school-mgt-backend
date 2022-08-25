@@ -1,5 +1,5 @@
-const express = require('express'),
-  staffRouter = express.Router();
+const express = require('express');
+const staffRouter = express.Router();
 const StaffController = require('../controllers/staff.controller');
 const tokenValidator = require('../middlewares/helpers/validators/token.validator');
 
@@ -12,6 +12,12 @@ staffRouter.get("/",
 staffRouter.get("/:id",
   tokenValidator.verifyToken,
   StaffController.getStaffById
+);
+
+staffRouter.post("/",
+  // tokenValidator.verifyToken,
+  // tokenValidator.adminValidator,
+  StaffController.create
 );
 
 staffRouter.put("/:id",

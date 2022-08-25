@@ -63,6 +63,9 @@ const create = async (req, res) => {
   if (studentExists) return res.status(400).json("Student Email already exists!");
   if (req.body.password !== req.body.confirmPassword) return res.status(404).json("passwords do not match!");
 
+  const phoneExists = await studentDb.findOne({ phone: req.body.phone });
+  if (phoneExists) return res.status(400).json({ message: "phone number already exists" });
+
   try {
     const cloudinary_response = await cloudinary.uploader.upload(req.body.photo, {
       folder: "mySchool"
@@ -91,7 +94,7 @@ const create = async (req, res) => {
     });
   } catch (error) {
     console.log("error for try-catch: ", error);
-    return res.status(500).json({"message": "Internal Server Error"});
+    return res.status(500).json({ "message": "Internal Server Error" });
   }
 };
 
