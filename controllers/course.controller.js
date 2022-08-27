@@ -1,5 +1,5 @@
 const status = require('http-status');
-const Course = require('../models/courseModel');
+const { Course } = require('../models');
 const staffDb = require('../models/staffModel');
 
 
@@ -30,7 +30,7 @@ const createCourse = async (req, res) => {
     let teacher = await staffDb.findOne({ staff_id: teacher_id });
     if (!teacher) return res.status(404).json({ message: "teacher not found" });
 
-    Course.create({ title, course_code, teacher_id })
+    Course.create({ title, course_code: course_code.toUpperCase(), teacher_id })
       .then(async course => res.status(201).json({ status: status[201], message: "success", data: course }))
       .catch(err => res.status(400).json({ status: status[400], message: err.errors }));
 
