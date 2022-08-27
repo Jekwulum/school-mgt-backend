@@ -1,22 +1,13 @@
-// const db = require('../middlewares/config/sql_database');
-const db = require('./index');
-const { DataTypes } = require('sequelize');
-const Course = require('./courseModel.js');
-
-const Grade = db.sequelize.define('Grade', {
+module.exports = (sequelize, type) => {
+  return sequelize.define('Grade', {
     id: {
-        type: db.Sequelize.UUID,
-        defaultValue: db.Sequelize.UUIDV4,
-        primaryKey: true,
-      },
-    student_id: { type: DataTypes.STRING, allowNull: false },
-    course_code: {
-        type: DataTypes.STRING, allowNull: false,
-        references: { model: Course, key: 'course_code' }
+      type: type.UUID,
+      defaultValue: type.UUIDV4,
+      primaryKey: true,
     },
-    grade: { type: DataTypes.STRING, allowNull: false },
-    score: { type: DataTypes.INTEGER, allowNull: false }
-});
-
-
-module.exports = Grade;
+    course_code: { type: type.STRING },
+    student_id: { type: type.STRING, allowNull: false },
+    score: { type: type.INTEGER, allowNull: false },
+    grade: { type: type.STRING, allowNull: false }
+  })
+};

@@ -66,13 +66,14 @@ const create = async (req, res) => {
   const phoneExists = await studentDb.findOne({ phone: req.body.phone });
   if (phoneExists) return res.status(400).json({ message: "phone number already exists" });
 
-  try {
-    const cloudinary_response = await cloudinary.uploader.upload(req.body.photo, {
-      folder: "mySchool"
-    });
+  let student_id = await generateID("stu", studentDb);
 
-    let newStudent = await new studentDb({
-      student_id: await generateID("stu", studentDb),
+  cloudinary.uploader.upload(req.body.photo, { folder: "mySchool" }, (err, result) => {
+    console.log("error: ", err);
+    if (err) return res.status(500).json({ "message": "Internal Server Error", status: "FAILED" });
+    console.log("here 2");
+    let newStudent = new studentDb({
+      student_id,
       password: req.body.password,
       name: {
         first: req.body.first,
@@ -83,19 +84,20 @@ const create = async (req, res) => {
       dob: req.body.dob,
       phone: req.body.phone,
       email: req.body.email,
-      photo: cloudinary_response.secure_url
+      photo: result.secure_url
     });
     newStudent.token = generateToken(newStudent._id, newStudent.student_id);
     newStudent.save((err, responseObj) => {
-      if (err || !responseObj) return res.status(400).json({ "error": err });
+      if (err || !responseObj) return res.status(400).json({ "message": err, status: "FAILED" });
       else {
-        return res.status(201).json({ "message": "New Student added successfully!", access: newStudent.token });
+        return res.status(201).json({ "message": "New Student added successfully!", access: newStudent.token, status: "SUCCESS" });
       };
     });
-  } catch (error) {
-    console.log("error for try-catch: ", error);
-    return res.status(500).json({ "message": "Internal Server Error" });
-  }
+  });
+  // } catch (error) {
+  //   console.log("error for try-catch: ", error);
+  //   return res.status(500).json({ "message": "Internal Server Error", status: "FAILED" });
+  // }
 };
 
 

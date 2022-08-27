@@ -15,8 +15,8 @@ staffRouter.get("/:id",
 );
 
 staffRouter.post("/",
-  // tokenValidator.verifyToken,
-  // tokenValidator.adminValidator,
+  tokenValidator.verifyToken,
+  tokenValidator.adminValidator,
   StaffController.create
 );
 

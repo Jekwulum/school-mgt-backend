@@ -1,25 +1,25 @@
 require("dotenv").config();
 
-const express = require("express"),
-	cors = require('cors'),
-	mongoose = require("mongoose"),
-	createError = require('http-errors'),
-	morgan = require("morgan"),
-	path = require('path');
+const express = require("express");
+const cors = require('cors');
+const mongoose = require("mongoose");
+const createError = require('http-errors');
+const morgan = require("morgan");
+const path = require('path');
 
-const apiRoutes = require("./routes/apiRoutes"),
-	authRoutes = require('./routes/authRoutes');
+const apiRoutes = require("./routes/apiRoutes");
+const authRoutes = require('./routes/authRoutes');
 
 
 global.appRoot = path.resolve(__dirname);
 global.appName = `School Management API`;
 
-const port = process.env.PORT || 4000,
-	logger = require('./middlewares/utils/logger'),
-	sqlDb = require('./models/index'),
-	swaggerJsDoc = require('swagger-jsdoc'),
-	swaggerUi = require('swagger-ui-express'),
-	swaggerDocument = require("./middlewares/swagger.json");
+const port = process.env.PORT || 4000;
+const logger = require('./middlewares/utils/logger');
+const { db: sqlDb } = require('./models/index');
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require("./middlewares/swagger.json");
 
 const swaggerOptions = {
 	swaggerDefinition: {
@@ -51,7 +51,15 @@ db.once('open', () => {
 
 
 (async () => {
-	await sqlDb.sequelize.sync({ alter: true });
+	await sqlDb.sequelize.authenticate()
+		.then(() => {
+			console.log(`[Database connection]: Connected correctly to PostgresDB server for ${appName}..`);
+			logger.info(`[Database connection]: Connected correctly to PostgresDB server for ${appName}..`);
+		})
+		.catch(err => {
+			console.error(`Unable to connect to PostgresDB Server. [Issue]: ${err}`);
+			logger.error(`Unable to connect to PostgresDB Server. [Issue]: ${err}`)
+		});
 })();
 
 
@@ -70,8 +78,8 @@ app.use((req, res, next) => {
 
 app.use(cors());
 app.use(morgan('dev'));
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
+app.use(express.json({ limit: "50mb" }));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 

@@ -1,8 +1,8 @@
 const status = require('http-status');
-const Grade = require('../models/gradeModel');
 const StudentDb = require('../models/studentModel');
 const gradeGenerator = require('../middlewares/utils/generate.grade');
-const Course = require('../models/courseModel');
+const { Course } = require('../models');
+const { Grade } = require('../models');
 
 const getGrade = async (req, res) => {
   try {
@@ -17,10 +17,10 @@ const getGrade = async (req, res) => {
 const getGradeByStudentId = async (req, res) => {
   try {
     Grade.findAll({ where: { student_id: req.params.id } })
-      .then(grades => res.status(200).json({ status: status[200], data: grades }))
-      .catch(err => res.status(400).json({ status: status[400], message: err }));
+      .then(grades => res.status(200).json({ status: "SUCCESS", data: grades }))
+      .catch(err => res.status(400).json({ status: "FAILED", message: err }));
   } catch (error) {
-    res.status(500).json({ status: status[500], message: error });
+    res.status(500).json({ status: "FAILED", message: error });
   };
 };
 
@@ -29,13 +29,14 @@ const addGrade = async (req, res) => {
     let studentExists = await StudentDb.findOne({ student_id: req.body.student_id });
     if (!studentExists) return res.status(404).json({ status: status[404], message: "student not found" });
 
-    let courseExists = await Course.findOne({ where: { course_code: req.body.course_code } });
+    let course_code = req.body.course_code.toUpperCase();
+    let courseExists = await Course.findOne({ where: { course_code: course_code } });
     if (!courseExists) return res.status(404).json({ status: status[404], message: "course not found" });
 
     let grade = gradeGenerator(req.body.score);
-    if (grade === 'invalid') return res.status(400).json({ status: status[400], message: "invalid score. score should be between 0 & 100" });
+    if (grade === 'invalid') return res.status(400).json({ status: status[400], message: "invalid score. score must be in range 0 & 100" });
 
-    await Grade.create({ ...req.body, grade })
+    await Grade.create({ ...req.body, course_code, grade })
       .then(async grade => res.status(201).json({ status: status[201], message: "success", data: grade }))
       .catch(err => res.status(400).json({ status: status[400], message: err.errors }));
 
@@ -63,7 +64,7 @@ const updateGrade = async (req, res) => {
       if (grade === 'invalid') return res.status(400).json({ status: status[400], message: "invalid score. score should be between 0 & 100" });
     };
 
-    Grade.update({...req.body, grade}, { where: { id: req.params.id } })
+    Grade.update({ ...req.body, grade }, { where: { id: req.params.id } })
       .then(grade => res.status(200).json({ status: status[200], message: "success", data: grade }))
       .catch(err => res.status(400).json({ status: status[400], message: err }))
   } catch (error) {
