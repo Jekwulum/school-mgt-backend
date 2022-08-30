@@ -13,9 +13,9 @@ const getStaff = async (req, res) => {
 			delete data.password;
 			responseData.push(data);
 		};
-		return res.status(200).json({ message: "Success", data: responseData, status: status[200] });
+		return res.status(200).json({ status: "SUCCESS", data: responseData });
 	};
-	return res.status(404).json({ status: status[404], message: "records not found!" });
+	return res.status(404).json({ status: "FAILED", message: "records not found!" });
 };
 
 const getStaffById = async (req, res) => {
@@ -26,9 +26,9 @@ const getStaffById = async (req, res) => {
 		let responseData = flattenObject(staff.toObject());
 		delete responseData.password;
 
-		return res.status(200).json({ message: "Success", data: responseData, status: status[200] });
+		return res.status(200).json({ status: "SUCCESS", data: responseData });
 	} else {
-		return res.status(404).json({ status: status[404], message: "record not found!" });
+		return res.status(404).json({ status:"FAILED", message: "record not found!" });
 	};
 };
 
@@ -53,24 +53,24 @@ const deleteStaff = async (req, res) => {
 		staffDb.deleteOne({ staff_id: req.params.id })
 			.then(() => {
 				console.log("deleted");
-				return res.status(200).json({ message: "SUCCESS", status: status[204] });
+				return res.status(200).json({ status: "SUCCESS", message: "Successful" });
 			})
 			.catch(error => {
 				console.log(error);
-				res.status(400).json({ status: status[400], message: error })
+				res.status(400).json({ status: "FAILED", message: error })
 			});
 	} else {
-		return res.status(404).json({ message: "Record not found", status: status[404] });
+		return res.status(404).json({ message: "Record not found", status: "FAILED" });
 	};
 };
 
 const create = async (req, res) => {
-	const is_admin = req.body.is_admin === "true" ? true : false;
+	const is_admin = req.body.is_admin === true ? true : false;
 	const staffExists = await staffDb.findOne({ email: req.body.email });
-	if (staffExists) return res.status(400).json({ message: "email already exists!" });
+	if (staffExists) return res.status(400).json({ status: "FAILED", message: "email already exists!" });
 
 	const phoneExists = await staffDb.findOne({ phone: req.body.phone });
-	if (phoneExists) return res.status(400).json({ message: "phone number already exists" });
+	if (phoneExists) return res.status(400).json({ status: "FAILED", message: "phone number already exists" });
 
 	try {
 		const cloudinary_response = await cloudinary.uploader.upload(req.body.photo, {
@@ -96,14 +96,14 @@ const create = async (req, res) => {
 		if (is_admin) new_staff.is_admin = true;
 		new_staff.token = generateToken(new_staff._id, new_staff.staff_id);
 		new_staff.save((err, responseObj) => {
-			if (err || !responseObj) return res.status(400).json({ "error": err });
+			if (err || !responseObj) return res.status(400).json({status: "FAILED", message: err, "error": err });
 			else {
-				return res.status(201).json({ "message": "New Staff added successfully!", access: new_staff.token });
+				return res.status(201).json({ status: "SUCCESS", "message": "New Staff added successfully!", access: new_staff.token });
 			};
 		});
 	} catch (error) {
 		console.log("error for try-catch: ", error);
-		return res.status(500).json({ "message": "Internal Server Error" });
+		return res.status(500).json({ status: "FAILED", "message": "Internal Server Error" });
 	}
 };
 
