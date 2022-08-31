@@ -16,11 +16,11 @@ const getCourse = async (req, res) => {
 const getCourseByCode = async (req, res) => {
   try {
     let course = await Course.findOne({ where: { course_code: req.params.id } });
-    if (course) return res.status(200).json({ status: status[200], message: "success", data: course });
-    else return res.status(404).json({ status: status[404], message: "course not found" });
+    if (course) return res.status(200).json({ status: "SUCCESS", message: "record fetched successfully", data: course });
+    else return res.status(404).json({ status: "FAILED", message: "course not found" });
 
   } catch (error) {
-    res.status(500).json({ status: status[500], message: error });
+    res.status(500).json({ status: "FAILED", message: error });
   };
 };
 
@@ -28,14 +28,14 @@ const createCourse = async (req, res) => {
   try {
     let { title, course_code, teacher_id } = req.body;
     let teacher = await staffDb.findOne({ staff_id: teacher_id });
-    if (!teacher) return res.status(404).json({ message: "teacher not found" });
+    if (!teacher) return res.status(404).json({ status: "SUCCESS", message: "teacher not found" });
 
     Course.create({ title, course_code: course_code.toUpperCase(), teacher_id })
-      .then(async course => res.status(201).json({ status: status[201], message: "success", data: course }))
-      .catch(err => res.status(400).json({ status: status[400], message: err.errors }));
+      .then(async course => res.status(201).json({ status: "SUCCESS", message: "Course created", data: course }))
+      .catch(err => res.status(400).json({ status: "FAILED", message: err.errors }));
 
   } catch (error) {
-    res.status(500).json({ status: status[500], message: error });
+    res.status(500).json({ status: "FAILED", message: error });
   };
 };
 
