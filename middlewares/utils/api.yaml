@@ -1015,6 +1015,44 @@ paths:
         500:
           description: Internal Server Error
 
+    delete:
+      summary: Deletes a grade
+      tags:
+        - Grades
+      security:
+        - AccessToken: []
+      parameters:
+        # - $ref: "#components/parameters/AccessToken"
+        - name: id
+          in: path
+          required: true
+          description: Grade UUID
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              message:
+                type: string
+          example: { status: "SUCCESS", message: "record deleted successfully" }
+        404:
+          description: Failed
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              message:
+                type: string
+          example: { status: "FAILED", message: "record not found" }
+        500:
+          description: Failed
+
 components:
   parameters:
     AccessToken:

@@ -77,7 +77,7 @@ const deleteGrade = async (req, res) => {
     if (!grade) return res.status(404).json({status: "FAILED", message: "Grade not found"});
 
     await Grade.destroy();
-    res.status(200).json({status: "SUCCESS", message: "Grade deleted"});
+    res.status(200).json({status: "SUCCESS", message: "record deleted successfully"});
   } catch (error) {
     res.status(500).json({status: "FAILED", message: error});
   }
