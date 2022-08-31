@@ -93,7 +93,7 @@ paths:
                 {
                   status: "SUCCESS",
                   access: string,
-                  "message": "New Student added successfully!",
+                  message: "New Student added successfully!",
                 }
         400:
           description: Failed
@@ -167,7 +167,60 @@ paths:
               message:
                 type: string
           example:
-            { status: "SUCCESS", message: "student's record deleted successfully" }
+            {
+              status: "SUCCESS",
+              message: "student's record deleted successfully",
+            }
+        404:
+          description: Failed
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              message:
+                type: string
+          example: { status: "FAILED", message: "student's record not found" }
+    put:
+      summary: updates a student's record
+      tags:
+        - students
+      consumes:
+        - application/json
+      parameters:
+        - $ref: "#components/parameters/AccessToken"
+        - name: id
+          in: path
+          required: true
+          description: Student's ID
+          schema:
+            type: string
+        - in: body
+          schemas:
+            $ref: "#components/schemas/Student"
+      responses:
+        200:
+          description: Success
+          content:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                message:
+                  type: string
+              example:
+                { status: "SUCCESS", message: "record successfully updated" }
+        404:
+          description: Failed
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              message:
+                type: string
+          example: { status: "FAILED", message: "student's record not found" }
 
 components:
   parameters:

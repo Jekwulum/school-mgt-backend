@@ -35,7 +35,7 @@ const getStudentById = async (req, res) => {
     delete responseData.password;
     responseData = { ...responseData, createdAt, dob, id };
 
-    return res.status(200).json({ message: "SUCCESS", data: responseData, status: status[200] });
+    return res.status(200).json({ status: "SUCCESS", data: responseData, message: "successfully fetched data" });
   };
   return res.status(404).json({ status: "FAILED", message: "student's record not found" });
 };
@@ -45,9 +45,9 @@ const updateStudent = async (req, res) => {
   if (student) {
     let updatedStudent = await updateController(data = req.body, obj = student, studentClass = classDB);
     await updatedStudent.save();
-    return res.status(200).json({ message: "SUCCESS", status: status[200] });
+    return res.status(200).json({ status: "SUCCESS", message: "record successfully updated" });
   }
-  return res.status(404).json({ status: status[404], message: "student not found" });
+  return res.status(404).json({ status: "FAILED", message: "student's record not found" });
 };
 
 const deleteStudent = async (req, res) => {
