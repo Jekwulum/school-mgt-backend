@@ -376,7 +376,7 @@ paths:
               message:
                 type: string
           example: { status: "FAILED", message: "staff's record not found" }
-    
+
     delete:
       summary: Deletes a staff's record
       tags:
@@ -414,6 +414,68 @@ paths:
               message:
                 type: string
           example: { status: "FAILED", message: "staff's record not found" }
+
+  /class/:
+    get:
+      summary: Returns all classes record
+      tags:
+        - Classes
+      parameters:
+        - $ref: "#components/parameters/AccessToken"
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              data:
+                type: object
+            example:
+              {
+                status: "SUCCESS",
+                data: [],
+                message: "fetched records succeesfully",
+              }
+    post:
+      summary: Creates a new class
+      tags:
+        - Classes
+      # security:
+      #   - AccessToken: []
+      consumes:
+        - application/json
+      parameters:
+        - $ref: "#components/parameters/AccessToken"
+        - in: body
+          schema:
+            $ref: "#components/schemas/Class"
+      responses:
+        201:
+          description: Created
+          content:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                message:
+                  type: string
+                data:
+                  type: object
+              example: { status: "SUCCESS", data: {}, message: "Class created" }
+        400:
+          description: Failed
+          content:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                message:
+                  type: string
+              example: { status: "FAILED", message: "Class already exists!" }
 
 components:
   parameters:
@@ -493,6 +555,20 @@ components:
           type: string
         is_admin:
           type: boolean
+
+    Class:
+      type: object
+      required:
+        - name
+        - subjects
+        - teacher_id
+      properties:
+        name:
+          type: string
+        subjects:
+          type: array
+        teacher_id:
+          type: string
 # securityDefinitions:
 #   AccessToken:
 #     name: "x-access-token"
