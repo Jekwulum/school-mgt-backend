@@ -556,6 +556,44 @@ paths:
               message:
                 type: string
           example: { status: "FAILED", message: "record not found" }
+    
+    delete:
+      summary: Deletes a class' record
+      tags:
+        - Classes
+      parameters:
+        - $ref: "#components/parameters/AccessToken"
+        - name: id
+          in: path
+          required: true
+          description: Class' name
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              message:
+                type: string
+          example:
+            {
+              status: "SUCCESS",
+              message: "record deleted successfully",
+            }
+        404:
+          description: Failed
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              message:
+                type: string
+          example: { status: "FAILED", message: "record not found" }
 
 components:
   parameters:
