@@ -708,7 +708,7 @@ paths:
     get:
       summary: Returns a course
       tags:
-        - Classes
+        - Courses
       security:
         - AccessToken: []
       parameters:
@@ -749,9 +749,9 @@ paths:
           description: Internal server error
 
     put:
-      summary: updates a class info
+      summary: updates a course's info
       tags:
-        - Classes
+        - Courses
       security:
         - AccessToken: []
       consumes:
@@ -792,6 +792,44 @@ paths:
           example: { status: "FAILED", message: "record not found" }
         500:
           description: Internal Server Error
+
+    delete:
+      summary: Deletes a course
+      tags:
+        - Courses
+      security:
+        - AccessToken: []
+      parameters:
+        # - $ref: "#components/parameters/AccessToken"
+        - name: id
+          in: path
+          required: true
+          description: Course code
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              message:
+                type: string
+          example: { status: "SUCCESS", message: "record deleted successfully" }
+        404:
+          description: Failed
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              message:
+                type: string
+          example: { status: "FAILED", message: "record not found" }
+        500:
+          description: Failed
 
 components:
   parameters:
