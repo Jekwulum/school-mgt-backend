@@ -704,8 +704,8 @@ paths:
                 type: object
             example: { status: "FAILED", message: "Internal server error" }
 
-    /course/{id}:
-      get:
+  /course/{id}:
+    get:
       summary: Returns a course
       tags:
         - Classes
@@ -747,6 +747,51 @@ paths:
             example: { status: "FAILED", message: "course not found" }
         500:
           description: Internal server error
+
+    put:
+      summary: updates a class info
+      tags:
+        - Classes
+      security:
+        - AccessToken: []
+      consumes:
+        - application/json
+      parameters:
+        # - $ref: "#components/parameters/AccessToken"
+        - name: course code
+          in: path
+          required: true
+          description: course code
+          schema:
+            type: string
+        - in: body
+          schema:
+            $ref: "#components/schemas/Course"
+      responses:
+        200:
+          description: Success
+          content:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                message:
+                  type: string
+              example:
+                { status: "SUCCESS", message: "record updated", data: {} }
+        404:
+          description: Failed
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              message:
+                type: string
+          example: { status: "FAILED", message: "record not found" }
+        500:
+          description: Internal Server Error
 
 components:
   parameters:

@@ -44,17 +44,17 @@ const updateCourse = async (req, res) => {
     let { teacher_id } = req.body;
     if (teacher_id !== undefined) {
       let teacherExists = await staffDb.findOne({ staff_id: teacher_id });
-      if (!teacherExists) return res.status(404).json({ status: status[404], message: "teacher not found" });
+      if (!teacherExists) return res.status(404).json({ status: "FAILED", message: "teacher not found" });
     };
 
     let course = await Course.findOne({ where: { course_code: req.params.id } });
-    if (!course) return res.status(404).json({ message: "course not found" });
+    if (!course) return res.status(404).json({ status: "FAILED", message: "course not found" });
 
     let updated_course = await course.update(req.body);
-    res.status(201).json({ status: status[201], message: "success", data: updated_course });
+    res.status(201).json({ status: "SUCCESS", message: "record updated", data: updated_course });
 
   } catch (error) {
-    res.status(400).json({ status: status[400], message: error });
+    res.status(500).json({ status: "FAILED", message: error });
   };
 };
 
