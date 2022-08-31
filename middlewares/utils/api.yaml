@@ -38,8 +38,10 @@ paths:
       description: This returns all students in the database
       tags:
         - Students
-      parameters:
-        - $ref: "#components/parameters/AccessToken"
+      security:
+        - AccessToken: []
+      # parameters:
+      #   - $ref: "#components/parameters/AccessToken"
       responses:
         200:
           description: Success
@@ -68,12 +70,12 @@ paths:
       summary: Creates a new student profile
       tags:
         - Students
-      # security:
-      #   - AccessToken: []
+      security:
+        - AccessToken: []
       consumes:
         - application/json
       parameters:
-        - $ref: "#components/parameters/AccessToken"
+        # - $ref: "#components/parameters/AccessToken"
         - in: body
           schema:
             $ref: "#components/schemas/Student"
@@ -117,8 +119,10 @@ paths:
       description: This fetches a student's record by the ID
       tags:
         - Students
+      security:
+        - AccessToken: []
       parameters:
-        - $ref: "#components/parameters/AccessToken"
+        # - $ref: "#components/parameters/AccessToken"
         - name: id
           in: path
           required: true
@@ -150,8 +154,10 @@ paths:
       summary: Deletes a student's record
       tags:
         - Students
+      security:
+        - AccessToken: []
       parameters:
-        - $ref: "#components/parameters/AccessToken"
+        # - $ref: "#components/parameters/AccessToken"
         - name: id
           in: path
           required: true
@@ -187,10 +193,12 @@ paths:
       summary: updates a student's record
       tags:
         - Students
+      security:
+        - AccessToken: []
       consumes:
         - application/json
       parameters:
-        - $ref: "#components/parameters/AccessToken"
+        # - $ref: "#components/parameters/AccessToken"
         - name: id
           in: path
           required: true
@@ -230,8 +238,10 @@ paths:
       summary: Returns all staff records
       tags:
         - Staff
-      parameters:
-        - $ref: "#components/parameters/AccessToken"
+      security:
+        - AccessToken: []
+      # parameters:
+        # - $ref: "#components/parameters/AccessToken"
       responses:
         200:
           description: Success
@@ -260,10 +270,12 @@ paths:
       summary: Creates a new staff profile
       tags:
         - Staff
+      security:
+        - AccessToken: []
       consumes:
         - application/json
       parameters:
-        - $ref: "#components/parameters/AccessToken"
+        # - $ref: "#components/parameters/AccessToken"
         - in: body
           schema:
             $ref: "#components/schemas/Staff"
@@ -306,8 +318,10 @@ paths:
       summary: Returns a staff's record
       tags:
         - Staff
+      security:
+        - AccessToken: []
       parameters:
-        - $ref: "#components/parameters/AccessToken"
+        # - $ref: "#components/parameters/AccessToken"
         - name: id
           in: path
           required: true
@@ -342,8 +356,10 @@ paths:
         - Staff
       consumes:
         - application/json
+      security:
+        - AccessToken: []
       parameters:
-        - $ref: "#components/parameters/AccessToken"
+        # - $ref: "#components/parameters/AccessToken"
         - name: id
           in: path
           required: true
@@ -381,8 +397,10 @@ paths:
       summary: Deletes a staff's record
       tags:
         - Staff
+      security:
+        - AccessToken: []
       parameters:
-        - $ref: "#components/parameters/AccessToken"
+        # - $ref: "#components/parameters/AccessToken"
         - name: id
           in: path
           required: true
@@ -420,8 +438,10 @@ paths:
       summary: Returns all classes record
       tags:
         - Classes
-      parameters:
-        - $ref: "#components/parameters/AccessToken"
+      security:
+        - AccessToken: []
+      # parameters:
+        # - $ref: "#components/parameters/AccessToken"
       responses:
         200:
           description: Success
@@ -447,7 +467,7 @@ paths:
       consumes:
         - application/json
       parameters:
-        - $ref: "#components/parameters/AccessToken"
+        # - $ref: "#components/parameters/AccessToken"
         - in: body
           schema:
             $ref: "#components/schemas/Class"
@@ -482,8 +502,10 @@ paths:
       summary: Returns a class' record
       tags:
         - Classes
+      security:
+        - AccessToken: []
       parameters:
-        - $ref: "#components/parameters/AccessToken"
+        # - $ref: "#components/parameters/AccessToken"
         - name: id
           in: path
           required: true
@@ -520,10 +542,12 @@ paths:
       summary: updates a class info
       tags:
         - Classes
+      security:
+        - AccessToken: []
       consumes:
         - application/json
       parameters:
-        - $ref: "#components/parameters/AccessToken"
+        # - $ref: "#components/parameters/AccessToken"
         - name: id
           in: path
           required: true
@@ -561,8 +585,10 @@ paths:
       summary: Deletes a class' record
       tags:
         - Classes
+      security:
+        - AccessToken: []
       parameters:
-        - $ref: "#components/parameters/AccessToken"
+        # - $ref: "#components/parameters/AccessToken"
         - name: id
           in: path
           required: true
@@ -687,14 +713,14 @@ components:
           type: array
         teacher_id:
           type: string
+
 securityDefinitions:
   AccessToken:
-    name: "x-access-token"
+    name: x-access-token
     in: header
     description: Acccess Token
     required: true
-    schema:
-      type: apiKey
+    type: apiKey
 
 security:
   - AccessToken: []
