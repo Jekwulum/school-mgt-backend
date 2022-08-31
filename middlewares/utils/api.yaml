@@ -300,6 +300,41 @@ paths:
       500:
         description: Internal server Error
 
+  /staff/{id}:
+  get:
+    summary: Returns a staff's record by ID
+    tags:
+      - Staff
+    parameters:
+      - $ref: "#components/parameters/AccessToken"
+      - name: id
+        in: path
+        required: true
+        description: Staff's ID
+        schema:
+          type: string
+    responses:
+      200:
+        description: Success
+        schema:
+          type: object
+          properties:
+            status:
+              type: string
+            data:
+              type: object
+          example: { status: "SUCCESS", data: {} }
+      404:
+        description: Not found
+        schema:
+          type: object
+          properties:
+            status:
+              type: string
+            message:
+              type: string
+          example: { status: "FAILED", message: "staff's record not found" }
+
 components:
   parameters:
     AccessToken:
