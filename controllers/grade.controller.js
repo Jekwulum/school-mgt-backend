@@ -7,10 +7,10 @@ const { Grade } = require('../models');
 const getGrade = async (req, res) => {
   try {
     let grades = await Grade.findAll();
-    res.status(200).json({ status: status[200], message: "hello", data: grades });
+    res.status(200).json({ status: "SUCCESS", message: "fetched records successfully", data: grades });
 
   } catch (error) {
-    res.status(500).json({ status: status[500], message: error });
+    res.status(500).json({ status: "FAILED", message: error });
   };
 };
 

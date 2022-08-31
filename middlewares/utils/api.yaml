@@ -831,6 +831,43 @@ paths:
         500:
           description: Failed
 
+  # Grade section
+  /grade/:
+    get:
+      summary: Returns all grades records
+      tags:
+        - Grades
+      security:
+        - AccessToken: []
+      # parameters:
+      # - $ref: "#components/parameters/AccessToken"
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              data:
+                type: object
+            example:
+              {
+                status: "SUCCESS",
+                data: [],
+                message: "fetched records succeesfully",
+              }
+        500:
+          description: failed
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              data:
+                type: object
+            example: { status: "FAILED", message: "failed to fetch records" }
+
 components:
   parameters:
     AccessToken:
