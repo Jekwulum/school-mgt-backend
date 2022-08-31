@@ -18,7 +18,7 @@ const getGradeByStudentId = async (req, res) => {
   try {
     Grade.findAll({ where: { student_id: req.params.id } })
       .then(grades => res.status(200).json({ status: "SUCCESS", data: grades }))
-      .catch(err => res.status(400).json({ status: "FAILED", message: err }));
+      .catch(err => res.status(404).json({ status: "FAILED", message: err }));
   } catch (error) {
     res.status(500).json({ status: "FAILED", message: error });
   };

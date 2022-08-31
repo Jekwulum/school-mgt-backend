@@ -893,8 +893,7 @@ paths:
                   type: string
                 data:
                   type: object
-              example:
-                { status: "SUCCESS", data: {}, message: "Grade added" }
+              example: { status: "SUCCESS", data: {}, message: "Grade added" }
         400:
           description: Failed
           content:
@@ -927,6 +926,50 @@ paths:
               data:
                 type: object
             example: { status: "FAILED", message: "Internal server error" }
+
+  /grade/{id}:
+    get:
+      summary: Returns a student's Grade
+      tags:
+        - Grades
+      security:
+        - AccessToken: []
+      parameters:
+        # - $ref: "#components/parameters/AccessToken"
+        - name: id
+          in: path
+          required: true
+          description: student's ID
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              data:
+                type: object
+            example:
+              {
+                status: "SUCCESS",
+                data: {},
+                message: "record fetched successfully",
+              }
+        404:
+          description: Not found
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              message:
+                type: string
+            example: { status: "FAILED", message: "record not found" }
+        500:
+          description: Internal server error
 
 components:
   parameters:
@@ -1034,7 +1077,7 @@ components:
           type: string
         teacher_id:
           type: string
-    
+
     Grade:
       type: object
       required:
@@ -1050,7 +1093,6 @@ components:
           type: integer
           minimum: 0
           maximum: 100
-        
 
 securityDefinitions:
   AccessToken:
