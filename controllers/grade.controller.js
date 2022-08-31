@@ -27,21 +27,21 @@ const getGradeByStudentId = async (req, res) => {
 const addGrade = async (req, res) => {
   try {
     let studentExists = await StudentDb.findOne({ student_id: req.body.student_id });
-    if (!studentExists) return res.status(404).json({ status: status[404], message: "student not found" });
+    if (!studentExists) return res.status(404).json({ status: "FAILED", message: "student not found" });
 
     let course_code = req.body.course_code.toUpperCase();
     let courseExists = await Course.findOne({ where: { course_code: course_code } });
-    if (!courseExists) return res.status(404).json({ status: status[404], message: "course not found" });
+    if (!courseExists) return res.status(404).json({ status: "FAILED", message: "course not found" });
 
     let grade = gradeGenerator(req.body.score);
-    if (grade === 'invalid') return res.status(400).json({ status: status[400], message: "invalid score. score must be in range 0 & 100" });
+    if (grade === 'invalid') return res.status(400).json({ status: "FAILED", message: "invalid score. score must be in range 0 & 100" });
 
     await Grade.create({ ...req.body, course_code, grade })
-      .then(async grade => res.status(201).json({ status: status[201], message: "success", data: grade }))
-      .catch(err => res.status(400).json({ status: status[400], message: err.errors }));
+      .then(async grade => res.status(201).json({ status: "SUCCESS", message: "Grade added", data: grade }))
+      .catch(err => res.status(400).json({ status: "FAILED", message: err.errors }));
 
   } catch (error) {
-    res.status(500).json({ status: status[500], message: error });
+    res.status(500).json({ status: "FAILED", message: error });
   };
 };
 
