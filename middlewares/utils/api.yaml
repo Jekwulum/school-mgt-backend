@@ -38,8 +38,10 @@ paths:
       description: This returns all students in the database
       tags:
         - Students
-      parameters:
-        - $ref: "#components/parameters/AccessToken"
+      security:
+        - AccessToken: []
+      # parameters:
+      #   - $ref: "#components/parameters/AccessToken"
       responses:
         200:
           description: Success
@@ -68,12 +70,12 @@ paths:
       summary: Creates a new student profile
       tags:
         - Students
-      # security:
-      #   - AccessToken: []
+      security:
+        - AccessToken: []
       consumes:
         - application/json
       parameters:
-        - $ref: "#components/parameters/AccessToken"
+        # - $ref: "#components/parameters/AccessToken"
         - in: body
           schema:
             $ref: "#components/schemas/Student"
@@ -117,8 +119,10 @@ paths:
       description: This fetches a student's record by the ID
       tags:
         - Students
+      security:
+        - AccessToken: []
       parameters:
-        - $ref: "#components/parameters/AccessToken"
+        # - $ref: "#components/parameters/AccessToken"
         - name: id
           in: path
           required: true
@@ -150,8 +154,10 @@ paths:
       summary: Deletes a student's record
       tags:
         - Students
+      security:
+        - AccessToken: []
       parameters:
-        - $ref: "#components/parameters/AccessToken"
+        # - $ref: "#components/parameters/AccessToken"
         - name: id
           in: path
           required: true
@@ -187,10 +193,12 @@ paths:
       summary: updates a student's record
       tags:
         - Students
+      security:
+        - AccessToken: []
       consumes:
         - application/json
       parameters:
-        - $ref: "#components/parameters/AccessToken"
+        # - $ref: "#components/parameters/AccessToken"
         - name: id
           in: path
           required: true
@@ -230,8 +238,10 @@ paths:
       summary: Returns all staff records
       tags:
         - Staff
-      parameters:
-        - $ref: "#components/parameters/AccessToken"
+      security:
+        - AccessToken: []
+      # parameters:
+      # - $ref: "#components/parameters/AccessToken"
       responses:
         200:
           description: Success
@@ -240,7 +250,7 @@ paths:
               type: object
               properties:
                 status:
-                  type: sttring
+                  type: string
                 data:
                   type: array
               example: { status:"SUCCESS", data: [] }
@@ -260,10 +270,12 @@ paths:
       summary: Creates a new staff profile
       tags:
         - Staff
+      security:
+        - AccessToken: []
       consumes:
         - application/json
       parameters:
-        - $ref: "#components/parameters/AccessToken"
+        # - $ref: "#components/parameters/AccessToken"
         - in: body
           schema:
             $ref: "#components/schemas/Staff"
@@ -306,8 +318,10 @@ paths:
       summary: Returns a staff's record
       tags:
         - Staff
+      security:
+        - AccessToken: []
       parameters:
-        - $ref: "#components/parameters/AccessToken"
+        # - $ref: "#components/parameters/AccessToken"
         - name: id
           in: path
           required: true
@@ -342,8 +356,10 @@ paths:
         - Staff
       consumes:
         - application/json
+      security:
+        - AccessToken: []
       parameters:
-        - $ref: "#components/parameters/AccessToken"
+        # - $ref: "#components/parameters/AccessToken"
         - name: id
           in: path
           required: true
@@ -381,8 +397,10 @@ paths:
       summary: Deletes a staff's record
       tags:
         - Staff
+      security:
+        - AccessToken: []
       parameters:
-        - $ref: "#components/parameters/AccessToken"
+        # - $ref: "#components/parameters/AccessToken"
         - name: id
           in: path
           required: true
@@ -415,13 +433,16 @@ paths:
                 type: string
           example: { status: "FAILED", message: "staff's record not found" }
 
+  # class section
   /class/:
     get:
       summary: Returns all classes record
       tags:
         - Classes
-      parameters:
-        - $ref: "#components/parameters/AccessToken"
+      security:
+        - AccessToken: []
+      # parameters:
+      # - $ref: "#components/parameters/AccessToken"
       responses:
         200:
           description: Success
@@ -447,7 +468,7 @@ paths:
       consumes:
         - application/json
       parameters:
-        - $ref: "#components/parameters/AccessToken"
+        # - $ref: "#components/parameters/AccessToken"
         - in: body
           schema:
             $ref: "#components/schemas/Class"
@@ -482,8 +503,10 @@ paths:
       summary: Returns a class' record
       tags:
         - Classes
+      security:
+        - AccessToken: []
       parameters:
-        - $ref: "#components/parameters/AccessToken"
+        # - $ref: "#components/parameters/AccessToken"
         - name: id
           in: path
           required: true
@@ -520,10 +543,12 @@ paths:
       summary: updates a class info
       tags:
         - Classes
+      security:
+        - AccessToken: []
       consumes:
         - application/json
       parameters:
-        - $ref: "#components/parameters/AccessToken"
+        # - $ref: "#components/parameters/AccessToken"
         - name: id
           in: path
           required: true
@@ -556,13 +581,15 @@ paths:
               message:
                 type: string
           example: { status: "FAILED", message: "record not found" }
-    
+
     delete:
       summary: Deletes a class' record
       tags:
         - Classes
+      security:
+        - AccessToken: []
       parameters:
-        - $ref: "#components/parameters/AccessToken"
+        # - $ref: "#components/parameters/AccessToken"
         - name: id
           in: path
           required: true
@@ -579,11 +606,7 @@ paths:
                 type: string
               message:
                 type: string
-          example:
-            {
-              status: "SUCCESS",
-              message: "record deleted successfully",
-            }
+          example: { status: "SUCCESS", message: "record deleted successfully" }
         404:
           description: Failed
           schema:
@@ -594,6 +617,441 @@ paths:
               message:
                 type: string
           example: { status: "FAILED", message: "record not found" }
+
+  # course section
+  /course/:
+    get:
+      summary: Returns all courses records
+      tags:
+        - Courses
+      security:
+        - AccessToken: []
+      # parameters:
+      # - $ref: "#components/parameters/AccessToken"
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              data:
+                type: object
+            example:
+              {
+                status: "SUCCESS",
+                data: [],
+                message: "fetched records succeesfully",
+              }
+        500:
+          description: failed
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              data:
+                type: object
+            example: { status: "FAILED", message: "failed to fetch records" }
+    post:
+      summary: Creates a new course
+      tags:
+        - Courses
+      security:
+        - AccessToken: []
+      consumes:
+        - application/json
+      parameters:
+        # - $ref: "#components/parameters/AccessToken"
+        - in: body
+          schema:
+            $ref: "#components/schemas/Course"
+      responses:
+        201:
+          description: Created
+          content:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                message:
+                  type: string
+                data:
+                  type: object
+              example:
+                { status: "SUCCESS", data: {}, message: "Course created" }
+        400:
+          description: Failed
+          content:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                message:
+                  type: string
+              example: { status: "FAILED", message: "Course already exists!" }
+        500:
+          description: failed
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              data:
+                type: object
+            example: { status: "FAILED", message: "Internal server error" }
+
+  /course/{id}:
+    get:
+      summary: Returns a course
+      tags:
+        - Courses
+      security:
+        - AccessToken: []
+      parameters:
+        # - $ref: "#components/parameters/AccessToken"
+        - name: code
+          in: path
+          required: true
+          description: course code
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              data:
+                type: object
+            example:
+              {
+                status: "SUCCESS",
+                data: {},
+                message: "record fetched successfully",
+              }
+        404:
+          description: Not found
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              message:
+                type: string
+            example: { status: "FAILED", message: "course not found" }
+        500:
+          description: Internal server error
+
+    put:
+      summary: updates a course's info
+      tags:
+        - Courses
+      security:
+        - AccessToken: []
+      consumes:
+        - application/json
+      parameters:
+        # - $ref: "#components/parameters/AccessToken"
+        - name: course code
+          in: path
+          required: true
+          description: course code
+          schema:
+            type: string
+        - in: body
+          schema:
+            $ref: "#components/schemas/Course"
+      responses:
+        200:
+          description: Success
+          content:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                message:
+                  type: string
+              example:
+                { status: "SUCCESS", message: "record updated", data: {} }
+        404:
+          description: Failed
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              message:
+                type: string
+          example: { status: "FAILED", message: "record not found" }
+        500:
+          description: Internal Server Error
+
+    delete:
+      summary: Deletes a course
+      tags:
+        - Courses
+      security:
+        - AccessToken: []
+      parameters:
+        # - $ref: "#components/parameters/AccessToken"
+        - name: id
+          in: path
+          required: true
+          description: Course code
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              message:
+                type: string
+          example: { status: "SUCCESS", message: "record deleted successfully" }
+        404:
+          description: Failed
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              message:
+                type: string
+          example: { status: "FAILED", message: "record not found" }
+        500:
+          description: Failed
+
+  # Grade section
+  /grade/:
+    get:
+      summary: Returns all grades records
+      tags:
+        - Grades
+      security:
+        - AccessToken: []
+      # parameters:
+      # - $ref: "#components/parameters/AccessToken"
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              data:
+                type: object
+            example:
+              {
+                status: "SUCCESS",
+                data: [],
+                message: "fetched records succeesfully",
+              }
+        500:
+          description: failed
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              data:
+                type: object
+            example: { status: "FAILED", message: "failed to fetch records" }
+    post:
+      summary: Adds a new Grade
+      tags:
+        - Grades
+      security:
+        - AccessToken: []
+      consumes:
+        - application/json
+      parameters:
+        # - $ref: "#components/parameters/AccessToken"
+        - in: body
+          schema:
+            $ref: "#components/schemas/Grade"
+      responses:
+        201:
+          description: Created
+          content:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                message:
+                  type: string
+                data:
+                  type: object
+              example: { status: "SUCCESS", data: {}, message: "Grade added" }
+        400:
+          description: Failed
+          content:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                message:
+                  type: string
+              example: { status: "FAILED", message: "Invalid score!" }
+        404:
+          description: Failed
+          content:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                message:
+                  type: string
+              example: { status: "FAILED", message: "Student not found!" }
+        500:
+          description: failed
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              data:
+                type: object
+            example: { status: "FAILED", message: "Internal server error" }
+
+  /grade/{id}:
+    get:
+      summary: Returns a student's Grade
+      tags:
+        - Grades
+      security:
+        - AccessToken: []
+      parameters:
+        # - $ref: "#components/parameters/AccessToken"
+        - name: id
+          in: path
+          required: true
+          description: student's ID
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              data:
+                type: object
+            example:
+              {
+                status: "SUCCESS",
+                data: {},
+                message: "record fetched successfully",
+              }
+        404:
+          description: Not found
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              message:
+                type: string
+            example: { status: "FAILED", message: "record not found" }
+        500:
+          description: Internal server error
+    put:
+      summary: updates a grade's info
+      tags:
+        - Grades
+      security:
+        - AccessToken: []
+      consumes:
+        - application/json
+      parameters:
+        # - $ref: "#components/parameters/AccessToken"
+        - name: grade ID
+          in: path
+          required: true
+          description: grade's UUID
+          schema:
+            type: string
+        - in: body
+          schema:
+            $ref: "#components/schemas/Grade"
+      responses:
+        200:
+          description: Success
+          content:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                message:
+                  type: string
+              example:
+                { status: "SUCCESS", message: "record updated", data: {} }
+        400:
+          description: Failed
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              message:
+                type: string
+          example: { status: "FAILED", message: "record not found" }
+        500:
+          description: Internal Server Error
+
+    delete:
+      summary: Deletes a grade
+      tags:
+        - Grades
+      security:
+        - AccessToken: []
+      parameters:
+        # - $ref: "#components/parameters/AccessToken"
+        - name: id
+          in: path
+          required: true
+          description: Grade UUID
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              message:
+                type: string
+          example: { status: "SUCCESS", message: "record deleted successfully" }
+        404:
+          description: Failed
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              message:
+                type: string
+          example: { status: "FAILED", message: "record not found" }
+        500:
+          description: Failed
 
 components:
   parameters:
@@ -687,14 +1145,44 @@ components:
           type: array
         teacher_id:
           type: string
+
+    Course:
+      type: object
+      required:
+        - title
+        - course_code
+        - teacher_id
+      properties:
+        title:
+          type: string
+        course_code:
+          type: string
+        teacher_id:
+          type: string
+
+    Grade:
+      type: object
+      required:
+        - course_code
+        - student_id
+        - score
+      properties:
+        course_code:
+          type: string
+        student_id:
+          type: string
+        score:
+          type: integer
+          minimum: 0
+          maximum: 100
+
 securityDefinitions:
   AccessToken:
-    name: "x-access-token"
+    name: x-access-token
     in: header
     description: Acccess Token
     required: true
-    schema:
-      type: apiKey
+    type: apiKey
 
 security:
   - AccessToken: []
