@@ -6,10 +6,10 @@ const staffDb = require('../models/staffModel');
 const getCourse = async (req, res) => {
   try {
     let courses = await Course.findAll();
-    res.status(200).json({ status: status[200], message: "success", data: courses });
+    res.status(200).json({ status: "SUCCESS", message: "fetched records successfully", data: courses });
 
   } catch (error) {
-    res.status(500).json({ message: error });
+    res.status(500).json({ status: "FAILED", message: `failed to fetch records: ${error}` });
   };
 };
 

@@ -241,7 +241,7 @@ paths:
       security:
         - AccessToken: []
       # parameters:
-        # - $ref: "#components/parameters/AccessToken"
+      # - $ref: "#components/parameters/AccessToken"
       responses:
         200:
           description: Success
@@ -433,6 +433,7 @@ paths:
                 type: string
           example: { status: "FAILED", message: "staff's record not found" }
 
+  # class section
   /class/:
     get:
       summary: Returns all classes record
@@ -441,7 +442,7 @@ paths:
       security:
         - AccessToken: []
       # parameters:
-        # - $ref: "#components/parameters/AccessToken"
+      # - $ref: "#components/parameters/AccessToken"
       responses:
         200:
           description: Success
@@ -580,7 +581,7 @@ paths:
               message:
                 type: string
           example: { status: "FAILED", message: "record not found" }
-    
+
     delete:
       summary: Deletes a class' record
       tags:
@@ -605,11 +606,7 @@ paths:
                 type: string
               message:
                 type: string
-          example:
-            {
-              status: "SUCCESS",
-              message: "record deleted successfully",
-            }
+          example: { status: "SUCCESS", message: "record deleted successfully" }
         404:
           description: Failed
           schema:
@@ -620,6 +617,47 @@ paths:
               message:
                 type: string
           example: { status: "FAILED", message: "record not found" }
+
+  # course section
+  /course/:
+    get:
+      summary: Returns all courses records
+      tags:
+        - Courses
+      security:
+        - AccessToken: []
+      # parameters:
+      # - $ref: "#components/parameters/AccessToken"
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              data:
+                type: object
+            example:
+              {
+                status: "SUCCESS",
+                data: [],
+                message: "fetched records succeesfully",
+              }
+        500:
+          description: failed
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              data:
+                type: object
+            example:
+              {
+                status: "FAILED",
+                message: "failed to fetch records",
+              }
 
 components:
   parameters:
@@ -711,6 +749,20 @@ components:
           type: string
         subjects:
           type: array
+        teacher_id:
+          type: string
+
+    Course:
+      type: object
+      required:
+        - title
+        - course_code
+        - teacher_id
+      properties:
+        title:
+          type: string
+        course_code:
+          type: string
         teacher_id:
           type: string
 
