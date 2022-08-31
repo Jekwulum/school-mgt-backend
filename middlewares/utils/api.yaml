@@ -970,6 +970,50 @@ paths:
             example: { status: "FAILED", message: "record not found" }
         500:
           description: Internal server error
+    put:
+      summary: updates a grade's info
+      tags:
+        - Grades
+      security:
+        - AccessToken: []
+      consumes:
+        - application/json
+      parameters:
+        # - $ref: "#components/parameters/AccessToken"
+        - name: grade ID
+          in: path
+          required: true
+          description: grade's UUID
+          schema:
+            type: string
+        - in: body
+          schema:
+            $ref: "#components/schemas/Grade"
+      responses:
+        200:
+          description: Success
+          content:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                message:
+                  type: string
+              example:
+                { status: "SUCCESS", message: "record updated", data: {} }
+        400:
+          description: Failed
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              message:
+                type: string
+          example: { status: "FAILED", message: "record not found" }
+        500:
+          description: Internal Server Error
 
 components:
   parameters:
