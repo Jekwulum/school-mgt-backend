@@ -442,8 +442,8 @@ paths:
       summary: Creates a new class
       tags:
         - Classes
-      # security:
-      #   - AccessToken: []
+      security:
+        - AccessToken: []
       consumes:
         - application/json
       parameters:
@@ -476,6 +476,86 @@ paths:
                 message:
                   type: string
               example: { status: "FAILED", message: "Class already exists!" }
+
+  /class/{id}:
+    get:
+      summary: Returns a class' record
+      tags:
+        - Classes
+      parameters:
+        - $ref: "#components/parameters/AccessToken"
+        - name: id
+          in: path
+          required: true
+          description: class name
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              data:
+                type: object
+            example:
+              {
+                status: "SUCCESS",
+                data: {},
+                message: "record fetched successfully",
+              }
+        404:
+          description: Not found
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              message:
+                type: string
+            example: { status: "FAILED", message: "record not found" }
+    put:
+      summary: updates a class info
+      tags:
+        - Classes
+      consumes:
+        - application/json
+      parameters:
+        - $ref: "#components/parameters/AccessToken"
+        - name: id
+          in: path
+          required: true
+          description: Class' name
+          schema:
+            type: string
+        - in: body
+          schema:
+            $ref: "#components/schemas/Class"
+      responses:
+        200:
+          description: Success
+          content:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                message:
+                  type: string
+              example:
+                { status: "SUCCESS", message: "record updated", data: {} }
+        404:
+          description: Failed
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              message:
+                type: string
+          example: { status: "FAILED", message: "record not found" }
 
 components:
   parameters:
@@ -569,14 +649,14 @@ components:
           type: array
         teacher_id:
           type: string
-# securityDefinitions:
-#   AccessToken:
-#     name: "x-access-token"
-#     in: header
-#     description: Acccess Token
-#     required: true
-#     schema:
-#       type: apiKey
+securityDefinitions:
+  AccessToken:
+    name: "x-access-token"
+    in: header
+    description: Acccess Token
+    required: true
+    schema:
+      type: apiKey
 
-# security:
-#   - AccessToken: []
+security:
+  - AccessToken: []

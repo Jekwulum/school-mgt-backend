@@ -20,10 +20,16 @@ classRouter.post("/",
   ClassController.createClass
 );
 
-classRouter.put("/update_class/:id",
+classRouter.put("/:id",
   tokenValidator.verifyToken,
   tokenValidator.adminValidator,
   ClassController.updateClass
+);
+
+classRouter.delete("/:id",
+  tokenValidator.verifyToken,
+  tokenValidator.adminValidator,
+  ClassController.deleteClass
 );
 
 module.exports = classRouter;

@@ -60,12 +60,21 @@ const createClass = async (req, res) => {
 const updateClass = async (req, res) => {
   let className = req.params.id.toUpperCase();
   let classExists = await classDb.findOne({ name: className });
-  if (!classExists) return res.status(400).json({ status: status[400], message: "record not found" });
+  if (!classExists) return res.status(404).json({ status: "FAILED", message: "record not found" });
 
   let updatedClass = await classDb.findOneAndUpdate({ name: className }, req.body, { new: true });
 
-  return res.status(200).json({ status: status[200], message: "success", data: updatedClass });
+  return res.status(200).json({ status: "SUCCESS", message: "record updated", data: updatedClass });
+};
+
+const deleteClass = async (req, res) => {
+  let className = req.params.id.toUpperCase();
+  let classExists = await classDb.findOne({ name: className });
+  if (!classExists) return res.status(404).json({ status: "FAILED", message: "record not found" });
+
+  await classDb.deleteOne({ name: className });
+  return res.status(200).json({ status: "SUCCESS", message: "record deleted successfully" });
 };
 
 
-module.exports = { getClass, getClassById, createClass, updateClass };
+module.exports = { getClass, getClassById, createClass, updateClass, deleteClass };
