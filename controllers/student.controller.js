@@ -51,7 +51,7 @@ const updateStudent = async (req, res) => {
 };
 
 const deleteStudent = async (req, res) => {
-  studentExists = await studentDb.findOne({ student_id: req.params.id });
+  let studentExists = await studentDb.findOne({ student_id: req.params.id });
   if (studentExists) {
     await studentDb.deleteOne({ student_id: req.params.id });
     return res.status(200).json({ status: "SUCCESS", message: "student's record deleted successfully" });

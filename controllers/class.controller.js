@@ -14,7 +14,7 @@ const getClass = async (req, res) => {
       data = { ...data, teacher_id };
       responseData.push(data);
     };
-    return res.status(200).json({ status: status[200], message: "success", data: responseData });
+    return res.status(200).json({ status: "SUCCESS", message: "fetched records succeesfully", data: responseData });
   };
 };
 
@@ -26,14 +26,14 @@ const getClassById = async (req, res) => {
     let responseData = flattenObject(getClass.toObject());
     responseData = { ...responseData, teacher_id };
 
-    return res.status(200).json({ status: status[200], message: "success", data: responseData });
+    return res.status(200).json({ status: "SUCCESS", message: "record fetched successfully", data: responseData });
   };
-  res.status(404).json({ status: status[404], message: "record not found!" });
+  res.status(404).json({ status: "FAILED", message: "record not found!" });
 };
 
 const createClass = async (req, res) => {
   let classExists = await classDb.findOne({ name: req.body.name });
-  if (classExists) return res.status(400).json({ status: status[400], message: "class already exists!" });
+  if (classExists) return res.status(400).json({ status: "FAILED", message: "class already exists!" });
 
   newClass = await new classDb({
     name: req.body.name,
@@ -41,18 +41,18 @@ const createClass = async (req, res) => {
   });
   staffDb.findOne({ staff_id: req.body.staff_id }).exec(
     async function (err, staff) {
-      if (err) return res.status(400).json({ status: status[400], message: "couldn't create class!", error: err });
+      if (err) return res.status(400).json({ status: "FAILED", message: "couldn't create class!", error: err });
       if (staff) {
         let staff_id = req.body.staff_id
         newClass.teacher_id = staff._id;
         await newClass.save((err, responseObj) => {
-          if (err || !responseObj) return res.status(400).json({ status: status[400], "error": err });
+          if (err || !responseObj) return res.status(400).json({ status: "FAILED", "error": err });
           let responseData = flattenObject(newClass.toObject());
           responseData = { ...responseData, staff_id };
 
-          return res.status(201).json({ status: status[201], message: "Class Created!", data: responseData });
+          return res.status(201).json({ status: "SUCCESS", message: "Class Created!", data: responseData });
         });
-      } else return res.status(400).json({ status: status[400], message: "staff not found" });
+      } else return res.status(400).json({ status: "FAILED", message: "staff not found" });
     }
   );
 };
@@ -60,12 +60,21 @@ const createClass = async (req, res) => {
 const updateClass = async (req, res) => {
   let className = req.params.id.toUpperCase();
   let classExists = await classDb.findOne({ name: className });
-  if (!classExists) return res.status(400).json({ status: status[400], message: "record not found" });
+  if (!classExists) return res.status(404).json({ status: "FAILED", message: "record not found" });
 
   let updatedClass = await classDb.findOneAndUpdate({ name: className }, req.body, { new: true });
 
-  return res.status(200).json({ status: status[200], message: "success", data: updatedClass });
+  return res.status(200).json({ status: "SUCCESS", message: "record updated", data: updatedClass });
+};
+
+const deleteClass = async (req, res) => {
+  let className = req.params.id.toUpperCase();
+  let classExists = await classDb.findOne({ name: className });
+  if (!classExists) return res.status(404).json({ status: "FAILED", message: "record not found" });
+
+  await classDb.deleteOne({ name: className });
+  return res.status(200).json({ status: "SUCCESS", message: "record deleted successfully" });
 };
 
 
-module.exports = { getClass, getClassById, createClass, updateClass };
+module.exports = { getClass, getClassById, createClass, updateClass, deleteClass };
