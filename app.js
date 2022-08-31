@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const createError = require('http-errors');
 const morgan = require("morgan");
 const path = require('path');
+const YAML = require('yamljs');
 
 const apiRoutes = require("./routes/apiRoutes");
 const authRoutes = require('./routes/authRoutes');
@@ -17,26 +18,8 @@ global.appName = `School Management API`;
 const port = process.env.PORT || 4000;
 const logger = require('./middlewares/utils/logger');
 const { db: sqlDb } = require('./models/index');
-const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerJsDocs = YAML.load('./middlewares/utils/api.yaml');
 const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require("./middlewares/swagger.json");
-
-const swaggerOptions = {
-	swaggerDefinition: {
-		info: {
-			title: 'mySchool API',
-			description: 'API for a school management application',
-			contact: {
-				name: "Charles Nwoye",
-				email: "charlesnwoye2@gmail.com",
-				url: "https://jekwulum.vercel.app"
-			},
-			servers: ['http://localhost:40000']
-		}
-	},
-	apis: ['app.js', './routes/*.js']
-};
-const swaggerDocs = swaggerJsDoc(swaggerOptions);
 
 
 // connecting to db
@@ -80,7 +63,7 @@ app.use(cors());
 app.use(morgan('dev'));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(express.json({ limit: "50mb" }));
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerJsDocs));
 
 
 // routes

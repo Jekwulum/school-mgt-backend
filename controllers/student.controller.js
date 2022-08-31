@@ -19,9 +19,9 @@ const getStudents = async (req, res) => {
       let studentData = { ...flattenedData, id };
       responseData.push(studentData);
     };
-    return res.status(200).json({ message: "SUCCESS", data: responseData, status: status[200] });
+    return res.status(200).json({ status: "SUCCESS", data: responseData, message: "Successfully fetched students records" });
   };
-  return res.status(404).json({ status: status[404], message: "records not found!" });
+  return res.status(404).json({ status: "FAILED", message: "records not found!" });
 };
 
 const getStudentById = async (req, res) => {
@@ -35,9 +35,9 @@ const getStudentById = async (req, res) => {
     delete responseData.password;
     responseData = { ...responseData, createdAt, dob, id };
 
-    return res.status(200).json({ message: "SUCCESS", data: responseData, status: status[200] });
+    return res.status(200).json({ status: "SUCCESS", data: responseData, message: "successfully fetched data" });
   };
-  return res.status(404).json({ status: status[404], message: "student not found" });
+  return res.status(404).json({ status: "FAILED", message: "student's record not found" });
 };
 
 const updateStudent = async (req, res) => {
@@ -45,26 +45,26 @@ const updateStudent = async (req, res) => {
   if (student) {
     let updatedStudent = await updateController(data = req.body, obj = student, studentClass = classDB);
     await updatedStudent.save();
-    return res.status(200).json({ message: "SUCCESS", status: status[200] });
+    return res.status(200).json({ status: "SUCCESS", message: "record successfully updated" });
   }
-  return res.status(404).json({ status: status[404], message: "student not found" });
+  return res.status(404).json({ status: "FAILED", message: "student's record not found" });
 };
 
 const deleteStudent = async (req, res) => {
   studentExists = await studentDb.findOne({ student_id: req.params.id });
   if (studentExists) {
     await studentDb.deleteOne({ student_id: req.params.id });
-    return res.status(200).json({ message: "SUCCESS", status: status[204], message: "student deleted successfully" });
-  } else return res.status(404).json({ status: status[404], message: "student not found" });
+    return res.status(200).json({ status: "SUCCESS", message: "student's record deleted successfully" });
+  } else return res.status(404).json({ status: "FAILED", message: "student not found" });
 };
 
 const create = async (req, res) => {
   const studentExists = await studentDb.findOne({ email: req.body.email });
-  if (studentExists) return res.status(400).json("Student Email already exists!");
-  if (req.body.password !== req.body.confirmPassword) return res.status(404).json("passwords do not match!");
+  if (studentExists) return res.status(400).json({ message: "Student Email already exists!", status: "FAILED" });
+  if (req.body.password !== req.body.confirmPassword) return res.status(404).json({ message: "passwords do not match!", status: "FAILED" });
 
   const phoneExists = await studentDb.findOne({ phone: req.body.phone });
-  if (phoneExists) return res.status(400).json({ message: "phone number already exists" });
+  if (phoneExists) return res.status(400).json({ message: "phone number already exists", status: "FAILED" });
 
   let student_id = await generateID("stu", studentDb);
 
