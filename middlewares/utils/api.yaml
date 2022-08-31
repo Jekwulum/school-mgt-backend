@@ -37,7 +37,7 @@ paths:
       summary: Fetches all students records
       description: This returns all students in the database
       tags:
-        - students
+        - Students
       parameters:
         - $ref: "#components/parameters/AccessToken"
       responses:
@@ -67,7 +67,9 @@ paths:
     post:
       summary: Creates a new student profile
       tags:
-        - students
+        - Students
+      # security:
+      #   - AccessToken: []
       consumes:
         - application/json
       parameters:
@@ -114,7 +116,7 @@ paths:
       summary: Returns a student's record by ID
       description: This fetches a student's record by the ID
       tags:
-        - students
+        - Students
       parameters:
         - $ref: "#components/parameters/AccessToken"
         - name: id
@@ -147,7 +149,7 @@ paths:
     delete:
       summary: Deletes a student's record
       tags:
-        - students
+        - Students
       parameters:
         - $ref: "#components/parameters/AccessToken"
         - name: id
@@ -184,7 +186,7 @@ paths:
     put:
       summary: updates a student's record
       tags:
-        - students
+        - Students
       consumes:
         - application/json
       parameters:
@@ -222,6 +224,82 @@ paths:
                 type: string
           example: { status: "FAILED", message: "student's record not found" }
 
+  # staff section
+  /staff/:
+    get:
+      summary: Returns all staff records
+      tags: Staff
+      parameters:
+        - $ref: "#components/parameters/AccessToken"
+      responses:
+        200:
+          description: Success
+          content:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: sttring
+                data:
+                  type: array
+              example: { status:"SUCCESS", data: [] }
+        400:
+          description: Failed
+          content:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                message:
+                  type: string
+              example: { status: "FAILED", message: "Records not found" }
+
+  post:
+    summary: Creates a new staff profile
+    tags:
+      - Staff
+    consumes:
+      - application/json
+    parameters:
+      - $ref: "#components/parameters/AccessToken"
+      - in: body
+        schema:
+          $ref: "#components/schemas/Staff"
+    responses:
+      201:
+        description: Created
+        content:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              message:
+                type: string
+              access:
+                type: string
+                description: access token
+            example:
+              {
+                status: "SUCCESS",
+                access: string,
+                message: "New Staff added successfully!",
+              }
+      400:
+        description: Failed
+        content:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              message:
+                type: string
+            example: { status: "FAILED", message: "Passwords do not match" }
+      500:
+        description: Internal server Error
+
 components:
   parameters:
     AccessToken:
@@ -237,6 +315,14 @@ components:
       required:
         - first
         - last
+        - other
+        - email
+        - password
+        - confirmPassword
+        - gender
+        - phone
+        - photo
+        - dob
       properties:
         first:
           type: string
@@ -258,3 +344,48 @@ components:
           type: string
         dob:
           type: string
+
+    Staff:
+      type: object
+      required:
+        - first
+        - last
+        - other
+        - email
+        - password
+        - confirmPassword
+        - gender
+        - phone
+        - photo
+      properties:
+        first:
+          type: string
+        last:
+          type: string
+        other:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        confirmPassword:
+          type: string
+        gender:
+          type: string
+        phone:
+          type: string
+        photo:
+          type: string
+        is_admin:
+          type: boolean
+# securityDefinitions:
+#   AccessToken:
+#     name: "x-access-token"
+#     in: header
+#     description: Acccess Token
+#     required: true
+#     schema:
+#       type: apiKey
+
+# security:
+#   - AccessToken: []

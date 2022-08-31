@@ -43,8 +43,8 @@ const updateStaff = async (req, res) => {
 		delete responseData.password;
 		responseData = flattenObject(responseData)
 		responseData = { ...responseData, createdAt };
-		return res.status(200).json({ message: "Success", data: responseData, status: status[200] });
-	} else return res.status(404).json({ status: status[404], message: "record not found!" });
+		return res.status(200).json({ message: "record updated", data: responseData, status: "SUCCESS" });
+	} else return res.status(404).json({ status: "FAILED", message: "record not found!" });
 }
 
 const deleteStaff = async (req, res) => {
