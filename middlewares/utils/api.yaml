@@ -113,7 +113,7 @@ paths:
 
   /student/{id}:
     get:
-      summary: Returns a student's record by ID
+      summary: Returns a student's record
       description: This fetches a student's record by the ID
       tags:
         - Students
@@ -198,7 +198,7 @@ paths:
           schema:
             type: string
         - in: body
-          schemas:
+          schema:
             $ref: "#components/schemas/Student"
       responses:
         200:
@@ -228,7 +228,8 @@ paths:
   /staff/:
     get:
       summary: Returns all staff records
-      tags: Staff
+      tags:
+        - Staff
       parameters:
         - $ref: "#components/parameters/AccessToken"
       responses:
@@ -255,37 +256,37 @@ paths:
                   type: string
               example: { status: "FAILED", message: "Records not found" }
 
-  post:
-    summary: Creates a new staff profile
-    tags:
-      - Staff
-    consumes:
-      - application/json
-    parameters:
-      - $ref: "#components/parameters/AccessToken"
-      - in: body
-        schema:
-          $ref: "#components/schemas/Staff"
-    responses:
-      201:
-        description: Created
-        content:
+    post:
+      summary: Creates a new staff profile
+      tags:
+        - Staff
+      consumes:
+        - application/json
+      parameters:
+        - $ref: "#components/parameters/AccessToken"
+        - in: body
           schema:
-            type: object
-            properties:
-              status:
-                type: string
-              message:
-                type: string
-              access:
-                type: string
-                description: access token
-            example:
-              {
-                status: "SUCCESS",
-                access: string,
-                message: "New Staff added successfully!",
-              }
+            $ref: "#components/schemas/Staff"
+      responses:
+        201:
+          description: Created
+          content:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                message:
+                  type: string
+                access:
+                  type: string
+                  description: access token
+              example:
+                {
+                  status: "SUCCESS",
+                  access: string,
+                  message: "New Staff added successfully!",
+                }
       400:
         description: Failed
         content:
@@ -301,38 +302,117 @@ paths:
         description: Internal server Error
 
   /staff/{id}:
-  get:
-    summary: Returns a staff's record by ID
-    tags:
-      - Staff
-    parameters:
-      - $ref: "#components/parameters/AccessToken"
-      - name: id
-        in: path
-        required: true
-        description: Staff's ID
-        schema:
-          type: string
-    responses:
-      200:
-        description: Success
-        schema:
-          type: object
-          properties:
-            status:
-              type: string
-            data:
+    get:
+      summary: Returns a staff's record
+      tags:
+        - Staff
+      parameters:
+        - $ref: "#components/parameters/AccessToken"
+        - name: id
+          in: path
+          required: true
+          description: Staff's ID
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              data:
+                type: object
+            example: { status: "SUCCESS", data: {} }
+        404:
+          description: Not found
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              message:
+                type: string
+            example: { status: "FAILED", message: "staff's record not found" }
+
+    put:
+      summary: updates a staff's record
+      tags:
+        - Staff
+      consumes:
+        - application/json
+      parameters:
+        - $ref: "#components/parameters/AccessToken"
+        - name: id
+          in: path
+          required: true
+          description: Staff's ID
+          schema:
+            type: string
+        - in: body
+          schema:
+            $ref: "#components/schemas/Staff"
+      responses:
+        200:
+          description: Success
+          content:
+            schema:
               type: object
-          example: { status: "SUCCESS", data: {} }
-      404:
-        description: Not found
-        schema:
-          type: object
-          properties:
-            status:
-              type: string
-            message:
-              type: string
+              properties:
+                status:
+                  type: string
+                message:
+                  type: string
+              example:
+                { status: "SUCCESS", message: "record successfully updated" }
+        404:
+          description: Failed
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              message:
+                type: string
+          example: { status: "FAILED", message: "staff's record not found" }
+    
+    delete:
+      summary: Deletes a staff's record
+      tags:
+        - Staff
+      parameters:
+        - $ref: "#components/parameters/AccessToken"
+        - name: id
+          in: path
+          required: true
+          description: Staff's ID
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              message:
+                type: string
+          example:
+            {
+              status: "SUCCESS",
+              message: "staff's record deleted successfully",
+            }
+        404:
+          description: Failed
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              message:
+                type: string
           example: { status: "FAILED", message: "staff's record not found" }
 
 components:
