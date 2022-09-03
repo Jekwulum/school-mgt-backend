@@ -23,6 +23,8 @@ const swaggerUi = require('swagger-ui-express');
 
 
 // connecting to db
+
+// mongodb
 mongoose.connect(process.env.MONGO_ATLAS_URL, { useUnifiedTopology: true, useNewUrlParser: true })
 	.then(() => logger.info(`[Database connection]: Connected correctly to MongoDB server for ${appName}..`))
 	.catch(error => logger.error(`Connection error to MongoDB Server. [Issue]: ${error}`));;
@@ -32,7 +34,7 @@ db.once('open', () => {
 	console.log(`[Database connection]: Connected correctly to MongoDB server for ${appName}..`)
 });
 
-
+// sql db
 (async () => {
 	await sqlDb.sequelize.authenticate()
 		.then(() => {
