@@ -12,12 +12,14 @@ const getStudents = async (req, res) => {
     for (let i = 0; i < students.length; i++) {
       let id = students[i]._id;
       let data = students[i].toObject()
+      let dob = data.dob;
       delete data.password;
       delete data.token;
       delete data.__v;
       let flattenedData = flattenObject(data);
-      let studentData = { ...flattenedData, id };
+      let studentData = { ...flattenedData, id, dob };
       responseData.push(studentData);
+      console.log("dob ", studentData);
     };
     return res.status(200).json({ status: "SUCCESS", data: responseData, message: "Successfully fetched students records" });
   };
@@ -69,9 +71,7 @@ const create = async (req, res) => {
   let student_id = await generateID("stu", studentDb);
 
   cloudinary.uploader.upload(req.body.photo, { folder: "mySchool" }, (err, result) => {
-    console.log("error: ", err);
     if (err) return res.status(500).json({ "message": "Internal Server Error", status: "FAILED" });
-    console.log("here 2");
     let newStudent = new studentDb({
       student_id,
       password: req.body.password,

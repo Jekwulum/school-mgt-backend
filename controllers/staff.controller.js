@@ -28,23 +28,19 @@ const getStaffById = async (req, res) => {
 
 		return res.status(200).json({ status: "SUCCESS", data: responseData });
 	} else {
-		return res.status(404).json({ status:"FAILED", message: "record not found!" });
+		return res.status(404).json({ status: "FAILED", message: "record not found!" });
 	};
 };
 
 const updateStaff = async (req, res) => {
-	let staff = await staffDb.findOneAndUpdate({ id: req.params.id }, { new: true });
+	let staff = await staffDb.findOne({ staff_id: req.params.id }, { new: true });
 	if (staff) {
 		let updatedStaff = await updateController(data = req.body, obj = staff);
 		await updatedStaff.save();
-		createdAt = JSON.stringify(updatedStaff.createdAt).split("T")[0].replace('"', "");
-
-		let responseData = updatedStaff.toObject();
-		delete responseData.password;
-		responseData = flattenObject(responseData)
-		responseData = { ...responseData, createdAt };
-		return res.status(200).json({ message: "record updated", data: responseData, status: "SUCCESS" });
-	} else return res.status(404).json({ status: "FAILED", message: "record not found!" });
+		return res.status(200).json({ message: "record updated", status: "SUCCESS" });
+	}
+	// staffDb.findOneAndUpdate({id: req.params});
+	return res.status(404).json({ status: "FAILED", message: "record not found!" });
 }
 
 const deleteStaff = async (req, res) => {
@@ -96,7 +92,7 @@ const create = async (req, res) => {
 		if (is_admin) new_staff.is_admin = true;
 		new_staff.token = generateToken(new_staff._id, new_staff.staff_id);
 		new_staff.save((err, responseObj) => {
-			if (err || !responseObj) return res.status(400).json({status: "FAILED", message: err, "error": err });
+			if (err || !responseObj) return res.status(400).json({ status: "FAILED", message: err, "error": err });
 			else {
 				return res.status(201).json({ status: "SUCCESS", "message": "New Staff added successfully!", access: new_staff.token });
 			};
