@@ -49,7 +49,7 @@ const staffDb = mongoose.Schema({
     default: true
   },
   is_admin: {
-    type: String,
+    type: Boolean,
     required: true,
     default: false
   },
