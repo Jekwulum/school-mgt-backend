@@ -69,7 +69,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerJsDocs));
 
 
 // routes
-app.get("/", (req, res) => res.send("hello World!"));
+app.get("/", (req, res) => res.send("Please visit https://j-myschool-api.herokuapp.com/api-docs"));
 app.use('/api', apiRoutes);
 app.use('/auth', authRoutes);
 app.use((req, res, next) => {
