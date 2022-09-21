@@ -43,6 +43,27 @@ const updateStaff = async (req, res) => {
 	return res.status(404).json({ status: "FAILED", message: "record not found!" });
 }
 
+const updatePhoto = async (req, res) => {
+	let staff = await staffDb.findOne({ staff_id: req.params.id }, { new: true });
+	if (staff) {
+		try {
+			if (req.body.photo) {
+				cloudinary.uploader.upload(req.body.photo, { folder: "mySchool" }, (err, result) => {
+					if (err) return res.status(500).json({ "message": "Internal Server Error", status: "FAILED" });
+					req.body.photo = result.secure_url;
+				});
+			}
+		} catch (error) {
+			return res.status(500).json({ status: "FAILED", message: "Internal Server Error" });
+		}
+		let updatedStaff = await updateController(data = req.body, obj = staff);
+		await updatedStaff.save();
+		return res.status(200).json({ message: "record updated", status: "SUCCESS" });
+	}
+	// staffDb.findOneAndUpdate({id: req.params});
+	return res.status(404).json({ status: "FAILED", message: "record not found!" });
+}
+
 const deleteStaff = async (req, res) => {
 	const staffExists = await staffDb.findOne({ staff_id: req.params.id });
 	if (staffExists) {
@@ -104,4 +125,4 @@ const create = async (req, res) => {
 };
 
 
-module.exports = { getStaff, getStaffById, updateStaff, deleteStaff, create };
+module.exports = { getStaff, getStaffById, updateStaff, deleteStaff, create, updatePhoto };
