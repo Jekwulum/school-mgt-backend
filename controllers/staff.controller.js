@@ -61,7 +61,7 @@ const deleteStaff = async (req, res) => {
 };
 
 const create = async (req, res) => {
-	const is_admin = req.body.is_admin === true ? true : false;
+	const is_admin = req.body.is_admin == true ? true : false;
 	const staffExists = await staffDb.findOne({ email: req.body.email });
 	if (staffExists) return res.status(400).json({ status: "FAILED", message: "email already exists!" });
 
