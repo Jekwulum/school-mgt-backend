@@ -1,6 +1,7 @@
 
 const status = require('http-status');
 const { generateToken, generateID } = require('../middlewares/utils/utils');
+const transporter = require('../middlewares/utils/mailTransporter');
 
 
 const express = require('express'),
@@ -140,9 +141,18 @@ authRouter.post('/create_student', async (req, res) => {
 });
 
 
-authRouter.post("/testpic", async (req, res) => {
-  console.log(typeof (req.body.first));
-  console.log(typeof (req.body.photo));
+authRouter.post("/reset-password", async (req, res) => {
+  try {
+    let info = await transporter.sendMail({
+      from: `"mySchool" <charlesnwoye2@gmail.com>`,
+      to: `${req.user}`,
+      subject: "Reset Password",
+      text: "",
+      html: ""
+    });
+  } catch (error) {
+    res.status(500).json({ "status": "FAILED", message: error });
+  }
   res.json(req.body.photo);
 });
 

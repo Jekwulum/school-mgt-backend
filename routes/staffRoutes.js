@@ -26,6 +26,11 @@ staffRouter.put("/:id",
   StaffController.updateStaff
 );
 
+staffRouter.patch("/:id",
+  tokenValidator.verifyToken,
+  StaffController.updatePhoto
+);
+
 staffRouter.delete("/:id",
   tokenValidator.verifyToken,
   tokenValidator.adminValidator,

@@ -52,6 +52,26 @@ const updateStudent = async (req, res) => {
   return res.status(404).json({ status: "FAILED", message: "student's record not found" });
 };
 
+const updatePhoto = async (req, res) => {
+  let student = await studentDb.findOneAndUpdate({ student_id: req.params.id }, { new: true });
+  if (student) {
+    try {
+      if (req.body.photo) {
+        cloudinary.uploader.upload(req.body.photo, { folder: "mySchool" }, (err, result) => {
+          if (err) return res.status(500).json({ "message": "Internal Server Error", status: "FAILED" });
+          req.body.photo = result.secure_url;
+        });
+      }
+    } catch (error) {
+      return res.status(500).json({ status: "FAILED", message: "Internal Server Error" });
+    }
+    let updatedStudent = await updateController(data = req.body, obj = student, studentClass = classDB);
+    await updatedStudent.save();
+    return res.status(200).json({ status: "SUCCESS", message: "profile photo successfully updated" });
+  }
+  return res.status(404).json({ status: "FAILED", message: "student's record not found" });
+};
+
 const deleteStudent = async (req, res) => {
   let studentExists = await studentDb.findOne({ student_id: req.params.id });
   if (studentExists) {
@@ -65,8 +85,10 @@ const create = async (req, res) => {
   if (studentExists) return res.status(400).json({ message: "Student Email already exists!", status: "FAILED" });
   if (req.body.password !== req.body.confirmPassword) return res.status(404).json({ message: "passwords do not match!", status: "FAILED" });
 
-  const phoneExists = await studentDb.findOne({ phone: req.body.phone });
-  if (phoneExists) return res.status(400).json({ message: "phone number already exists", status: "FAILED" });
+  if (req.body.phone !== "") {
+    const phoneExists = await studentDb.findOne({ phone: req.body.phone });
+    if (phoneExists) return res.status(400).json({ message: "phone number already exists", status: "FAILED" });
+  }
 
   let student_id = await generateID("stu", studentDb);
 
@@ -101,4 +123,4 @@ const create = async (req, res) => {
 };
 
 
-module.exports = { getStudents, getStudentById, updateStudent, deleteStudent, create };
+module.exports = { getStudents, getStudentById, updateStudent, updatePhoto, deleteStudent, create };

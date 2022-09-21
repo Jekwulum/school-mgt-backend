@@ -25,6 +25,11 @@ studentRouter.put("/:id",
   StudentController.updateStudent
 );
 
+studentRouter.patch("/:id",
+  tokenValidator.verifyToken,
+  StudentController.updatePhoto
+);
+
 studentRouter.delete("/:id",
   tokenValidator.verifyToken,
   tokenValidator.adminValidator,
