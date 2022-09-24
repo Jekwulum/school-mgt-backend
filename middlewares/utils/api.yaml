@@ -94,7 +94,7 @@ paths:
                   type: string
                 message:
                   type: string
-              example: { status: "FAILED", message: "Passwords do not match" }
+              example: { status: "FAILED", message: "Unable to perform operation" }
         500:
           description: Internal server Error
 
