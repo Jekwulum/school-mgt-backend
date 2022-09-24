@@ -11,7 +11,7 @@ info:
   servers:
     - url: "http://localhost:4000/"
       description: This is the local server
-    - url: "http://ahostedplatforminthefuture.com"
+    - url: "https://j-myschool-api.herokuapp.com/"
       description: This is the hosted server
 
 schemes: [http, https]
