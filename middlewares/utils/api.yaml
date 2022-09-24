@@ -17,21 +17,6 @@ info:
 schemes: [http, https]
 
 paths:
-  /:
-    get:
-      summary: Returns Hello World
-      description: This tests the server
-      responses:
-        200:
-          description: Success
-          scema:
-            type: string
-            example: "a string value"
-        400:
-        description: Bad request
-        500:
-          description: Internal Server Error
-
   /student/:
     get:
       summary: Fetches all students records
