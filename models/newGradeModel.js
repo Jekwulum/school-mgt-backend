@@ -9,4 +9,4 @@ const gradeDb = mongoose.Schema({
 
 const Grade = mongoose.model("Grade", gradeDb);
 
-module.exports = gradeDb;
+module.exports = Grade;

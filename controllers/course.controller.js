@@ -1,5 +1,5 @@
-const { flattenObject } = require('../middlewares/utils/utils');
-const { Course } = require('../models');
+// const { flattenObject } = require('../middlewares/utils/utils');
+// const { Course } = require('../models');
 const CourseDb = require('../models/newCourseModel');
 const staffDb = require('../models/staffModel');
 
