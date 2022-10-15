@@ -25,7 +25,8 @@ const tokenValidator = {
 
   adminValidator: async (req, res, next) => {
     let user_id = String(req.user.user_id);
-    let user = await staffDb.findOne({ staff_id: user_id })
+    let user = await staffDb.findOne({ staff_id: user_id });
+    // console.log("here", user.is_admin);
     if (!user.is_admin) {
       const response = AuthResponse.authenticationError();
       return res.status(response.status).json({ status: response.type, message: response.message });

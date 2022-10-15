@@ -1,4 +1,3 @@
-const status = require('http-status');
 const classDb = require('../models/classModel');
 const staffDb = require('../models/staffModel');
 const { flattenObject } = require("../middlewares/utils/utils");

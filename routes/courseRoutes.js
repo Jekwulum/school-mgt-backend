@@ -3,14 +3,14 @@ const CourseController = require('../controllers/course.controller');
 const tokenValidator = require('../middlewares/helpers/validators/token.validator');
 const courseRouter = express.Router();
 
+courseRouter.get('/:course_code',
+  tokenValidator.verifyToken,
+  CourseController.getCourseByCode
+);
+
 courseRouter.get('/',
   tokenValidator.verifyToken,
   CourseController.getCourse
-);
-
-courseRouter.get('/:id',
-  tokenValidator.verifyToken,
-  CourseController.getCourseByCode
 );
 
 courseRouter.post('/',
@@ -19,13 +19,13 @@ courseRouter.post('/',
   CourseController.createCourse
 );
 
-courseRouter.put('/:id',
+courseRouter.put('/:course_code',
   tokenValidator.verifyToken,
   tokenValidator.adminValidator,
   CourseController.updateCourse
 );
 
-courseRouter.delete('/:id',
+courseRouter.delete('/:course_code',
   tokenValidator.verifyToken,
   tokenValidator.adminValidator,
   CourseController.deleteCourse

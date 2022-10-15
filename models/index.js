@@ -49,17 +49,16 @@ Course.belongsTo(Grade);
 
 
 
-sequelize.sync({ alter: true })
-  .then(() => {
-    console.log(`[Database connection]: Databases & tables created for ${appName}..`);
-    logger.info(`[Database connection]: Databases & tables created for ${appName}..`);
-  })
-  .catch(error => {
-    console.log(`[Database connection]: Error synchronizing tables: ${error}..`);
-    logger.error(`[Database connection]: Error synchronizing tables: ${error}..`);
-  });
+// sequelize.sync({ alter: true })
+//   .then(() => {
+//     console.log(`[Database connection]: Databases & tables created for ${appName}..`);
+//     logger.info(`[Database connection]: Databases & tables created for ${appName}..`);
+//   })
+//   .catch(error => {
+//     console.log(`[Database connection]: Error synchronizing tables: ${error}..`);
+//     logger.error(`[Database connection]: Error synchronizing tables: ${error}..`);
+//   });
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
-
 module.exports = { db, Course, Grade };

@@ -11,6 +11,7 @@ const getStaff = async (req, res) => {
 		for (let i = 0; i < staff.length; i++) {
 			let data = flattenObject(staff[i].toObject());
 			delete data.password;
+			delete data.token;
 			responseData.push(data);
 		};
 		return res.status(200).json({ status: "SUCCESS", data: responseData });
@@ -25,6 +26,7 @@ const getStaffById = async (req, res) => {
 		createdAt = JSON.stringify(staff.createdAt).split("T")[0].replace('"', "");
 		let responseData = flattenObject(staff.toObject());
 		delete responseData.password;
+		delete responseData.token;
 
 		return res.status(200).json({ status: "SUCCESS", data: responseData });
 	} else {

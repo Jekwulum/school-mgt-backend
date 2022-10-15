@@ -35,17 +35,17 @@ db.once('open', () => {
 });
 
 // sql db
-(async () => {
-	await sqlDb.sequelize.authenticate()
-		.then(() => {
-			console.log(`[Database connection]: Connected correctly to PostgresDB server for ${appName}..`);
-			logger.info(`[Database connection]: Connected correctly to PostgresDB server for ${appName}..`);
-		})
-		.catch(err => {
-			console.error(`Unable to connect to PostgresDB Server. [Issue]: ${err}`);
-			logger.error(`Unable to connect to PostgresDB Server. [Issue]: ${err}`)
-		});
-})();
+// (async () => {
+// 	await sqlDb.sequelize.authenticate()
+// 		.then(() => {
+// 			console.log(`[Database connection]: Connected correctly to PostgresDB server for ${appName}..`);
+// 			logger.info(`[Database connection]: Connected correctly to PostgresDB server for ${appName}..`);
+// 		})
+// 		.catch(err => {
+// 			console.error(`Unable to connect to PostgresDB Server. [Issue]: ${err}`);
+// 			logger.error(`Unable to connect to PostgresDB Server. [Issue]: ${err}`)
+// 		});
+// })();
 
 
 // starting app
