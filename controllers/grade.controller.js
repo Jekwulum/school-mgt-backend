@@ -30,11 +30,11 @@ const getGradeByStudentId = async (req, res) => {
 const addGrade = async (req, res) => {
   try {
     StudentDb.findOne({ student_id: req.body.student_id }, async (err, studentObj) => {
-      if (err || !studentObj) res.status(404).json({ message: "Student record not found", status: "FAILED" })
+      if (err || !studentObj) return res.status(404).json({ message: "Student record not found", status: "FAILED" })
       else {
         let course_code = req.body.course_code.toUpperCase();
         CourseDb.findOne({ course_code }, async (err, courseObj) => {
-          if (err || !courseObj) res.status(404).json({ message: "Course record not found", status: "FAILED" });
+          if (err || !courseObj) return res.status(404).json({ message: "Course record not found", status: "FAILED" });
 
           let grade = gradeGenerator(req.body.score);
           if (grade === 'invalid') return res.status(400).json({ status: "FAILED", message: "invalid score. score must be in range 0 & 100" });
@@ -44,7 +44,7 @@ const addGrade = async (req, res) => {
           await newGrade.save(async (err, gradeObj) => {
             console.log("here 2")
             if (err || !gradeObj) return res.status(400).json({ status: "FAILED", message: err })
-            else res.status(201).json({ status: "SUCCESS", message: "Grade added", data: gradeObj });
+            else return res.status(201).json({ status: "SUCCESS", message: "Grade added", data: gradeObj });
           })
         })
       }
@@ -92,10 +92,10 @@ const updateGrade = async (req, res) => {
 
 const deleteGrade = async (req, res) => {
   try {
-    let grade = await Grade.findOne({ where: { id: req.params.id } });
+    let grade = await GradeDb.findOne({ _id: req.params.id });
     if (!grade) return res.status(404).json({ status: "FAILED", message: "Grade not found" });
 
-    await Grade.destroy();
+    await GradeDb.deleteOne({ _id: req.params.id });
     res.status(200).json({ status: "SUCCESS", message: "record deleted successfully" });
   } catch (error) {
     res.status(500).json({ status: "FAILED", message: error });
