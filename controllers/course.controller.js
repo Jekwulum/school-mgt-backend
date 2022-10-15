@@ -34,6 +34,7 @@ const createCourse = async (req, res) => {
 
     let newCourse = await new CourseDb({ title, course_code, teacher_id });
     await newCourse.save((err, responseObj) => {
+      console.log(err);
       if (err || !responseObj) return res.status(400).json({ status: "FAILED", "error": err });
       return res.status(201).json({ status: "SUCCESS", message: "Class Created!", data: responseObj });
     })
@@ -51,11 +52,14 @@ const updateCourse = async (req, res) => {
       if (!teacherExists) return res.status(404).json({ status: "FAILED", message: "teacher not found" });
     };
 
-    let course = await Course.findOne({ where: { course_code: req.params.id } });
-    if (!course) return res.status(404).json({ status: "FAILED", message: "course not found" });
-
-    let updated_course = await course.update(req.body);
-    res.status(201).json({ status: "SUCCESS", message: "record updated", data: updated_course });
+    let course_code = req.params.course_code.toUpperCase();
+    CourseDb.findOne({ course_code }, async (err, doc) => {
+      if (err || !doc) return res.status(404).json({ message: "Record not found", status: "FAILED" });
+      CourseDb.updateOne({ course_code }, req.body, async (err) => {
+        if (err) res.status(400).json({ status: "FAILED", message: err });
+        else res.status(200).json({ status: "SUCCESS", message: "Records successfully updated" });
+      });
+    });
 
   } catch (error) {
     res.status(500).json({ status: "FAILED", message: error });
@@ -64,10 +68,10 @@ const updateCourse = async (req, res) => {
 
 const deleteCourse = async (req, res) => {
   try {
-    let course = await Course.findOne({ where: { course_code: req.params.id } });
+    let course = await CourseDb.findOne({ course_code: req.params.course_code });
     if (!course) return res.status(404).json({ status: "FAILED", message: "course not found" });
 
-    await course.destroy();
+    await CourseDb.deleteOne({ course_code: req.params.course_code });
     res.status(200).json({ status: "SUCCESS", message: "Course deleted" });
   } catch (error) {
     res.status(500).json({ status: "FAILED", message: error });
