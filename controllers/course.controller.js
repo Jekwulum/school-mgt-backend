@@ -57,7 +57,7 @@ const updateCourse = async (req, res) => {
       if (err || !doc) return res.status(404).json({ message: "Record not found", status: "FAILED" });
       CourseDb.updateOne({ course_code }, req.body, async (err) => {
         if (err) res.status(400).json({ status: "FAILED", message: err });
-        else res.status(200).json({ status: "SUCCESS", message: "Records successfully updated" });
+        else res.status(200).json({ status: "SUCCESS", message: "Record successfully updated" });
       });
     });
 

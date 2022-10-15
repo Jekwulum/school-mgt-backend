@@ -20,7 +20,7 @@ const getGradeByStudentId = async (req, res) => {
   try {
     GradeDb.find({ student_id: req.params.id }, async (err, gradeObj) => {
       if (err || !gradeObj) res.status(404).json({ message: "record not found", status: "FAILED" });
-      else return res.status(200).json({status: "SUCCESS", message: "Fecthed records successfully", data: gradeObj});
+      else return res.status(200).json({ status: "SUCCESS", message: "Fecthed records successfully", data: gradeObj });
     });
   } catch (error) {
     res.status(500).json({ status: "FAILED", message: error });
@@ -65,18 +65,26 @@ const updateGrade = async (req, res) => {
     };
 
     if (course_code !== undefined) {
-      let courseExists = await Course.findOne({ where: { course_code: req.body.course_code } });
+      course_code = course_code.toUpperCase();
+      let courseExists = await CourseDb.findOne({ course_code });
       if (!courseExists) return res.status(404).json({ status: "FAILED", message: "course not found" });
     };
 
     if (score !== undefined) {
       let grade = gradeGenerator(score);
-      if (grade === 'invalid') return res.status(400).json({ status: "FAILED", message: "invalid score. score should be between 0 & 100" });
+      if (grade === 'invalid') return res.status(400).json({ status: "FAILED", message: "invalid score. score should be between 0 & 100" })
+      else req.body = { ...req.body, grade };
     };
 
-    Grade.update({ ...req.body, grade }, { where: { id: req.params.id } })
-      .then(grade => res.status(200).json({ status: "SUCCESS", message: "record successfully fetched", data: grade }))
-      .catch(err => res.status(400).json({ status: "FAILED", message: err }))
+    GradeDb.findOne({ _id: req.params.id }, async (err, gradeObj) => {
+      if (err || !gradeObj) return res.status(404).json({ message: "Grade record not found", status: "FAILED" });
+
+      GradeDb.updateOne({ _id: req.params.id }, req.body, async (err) => {
+        if (err) res.status(400).json({ status: "FAILED", message: err });
+        else res.status(200).json({ status: "SUCCESS", message: "Record successfully updated" });
+      });
+    });
+
   } catch (error) {
     res.status(500).json({ status: "FAILED", message: error });
   };
