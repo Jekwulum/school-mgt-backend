@@ -1,10 +1,11 @@
 const { Course } = require('../models');
+const CourseDb = require('../models/newCourseModel');
 const staffDb = require('../models/staffModel');
 
 
 const getCourse = async (req, res) => {
   try {
-    let courses = await Course.findAll();
+    let courses = await CourseDb.find();
     res.status(200).json({ status: "SUCCESS", message: "fetched records successfully", data: courses });
 
   } catch (error) {
