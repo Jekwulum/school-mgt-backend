@@ -1,4 +1,3 @@
-const status = require('http-status');
 const { Course } = require('../models');
 const staffDb = require('../models/staffModel');
 

@@ -61,5 +61,4 @@ sequelize.sync({ alter: true })
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
-
 module.exports = { db, Course, Grade };
