@@ -1,3 +1,4 @@
+const { flattenObject } = require('../middlewares/utils/utils');
 const { Course } = require('../models');
 const CourseDb = require('../models/newCourseModel');
 const staffDb = require('../models/staffModel');
@@ -15,7 +16,8 @@ const getCourse = async (req, res) => {
 
 const getCourseByCode = async (req, res) => {
   try {
-    let course = await Course.findOne({ where: { course_code: req.params.id } });
+    // let course = await Course.findOne({ where: { course_code: req.params.id } });
+    let course = await CourseDb.findOne({ course_code: req.params.course_code });
     if (course) return res.status(200).json({ status: "SUCCESS", message: "record fetched successfully", data: course });
     else return res.status(404).json({ status: "FAILED", message: "course not found" });
 
@@ -30,9 +32,11 @@ const createCourse = async (req, res) => {
     let teacher = await staffDb.findOne({ staff_id: teacher_id });
     if (!teacher) return res.status(404).json({ status: "SUCCESS", message: "teacher not found" });
 
-    Course.create({ title, course_code: course_code.toUpperCase(), teacher_id })
-      .then(async course => res.status(201).json({ status: "SUCCESS", message: "Course created", data: course }))
-      .catch(err => res.status(400).json({ status: "FAILED", message: err.errors }));
+    let newCourse = await new CourseDb({ title, course_code, teacher_id });
+    await newCourse.save((err, responseObj) => {
+      if (err || !responseObj) return res.status(400).json({ status: "FAILED", "error": err });
+      return res.status(201).json({ status: "SUCCESS", message: "Class Created!", data: responseObj });
+    })
 
   } catch (error) {
     res.status(500).json({ status: "FAILED", message: error });
